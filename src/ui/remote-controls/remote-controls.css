@@ -1,0 +1,223 @@
+.remote-shell {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  overflow: auto;
+  padding: clamp(0.75rem, 3vw, 2rem);
+  color: var(--gray-12);
+}
+
+.remote-header,
+.remote-connection-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.remote-header {
+  border-bottom: 1px solid var(--gray-a6);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.remote-header h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 5vw, 2.5rem);
+}
+
+.remote-header p {
+  margin: 0.3rem 0 0;
+}
+
+.remote-session {
+  display: grid;
+  gap: 1rem;
+}
+
+.remote-session-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.remote-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.remote-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  align-items: start;
+  gap: 1rem;
+}
+
+.remote-panel {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-3);
+  background: var(--color-panel);
+  padding: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.remote-panel > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.3rem;
+}
+
+.remote-panel section + section {
+  border-top: 1px solid var(--gray-a6);
+  margin-top: 1.5rem;
+  padding-top: 0.75rem;
+}
+
+.remote-chooser {
+  max-width: 52rem;
+  margin: 1rem auto;
+}
+
+.remote-form {
+  display: grid;
+  align-items: start;
+  gap: 0.6rem;
+  max-width: 36rem;
+  margin-top: 1rem;
+}
+
+.remote-form label,
+.remote-panel label {
+  font-weight: 500;
+}
+
+.remote-form input:not([type='checkbox']),
+.remote-form select,
+.remote-panel input:not([type='checkbox']),
+.remote-panel select {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  border: 1px solid var(--gray-a8);
+  border-radius: var(--radius-2);
+  padding: 0.55rem 0.7rem;
+  background: var(--color-surface);
+  color: var(--gray-12);
+  font: inherit;
+}
+
+.remote-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.9rem 0;
+  line-height: 1.5;
+}
+
+.remote-check input {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.15rem;
+}
+
+.remote-list {
+  list-style: none;
+  padding: 0;
+}
+
+.remote-list > li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--gray-a5);
+}
+
+.remote-list p {
+  margin: 0.25rem 0;
+}
+
+.remote-code {
+  display: block;
+  width: 10ch;
+  letter-spacing: 0.25em;
+  font-family: var(--font-mono), monospace !important;
+  font-size: 1.7rem !important;
+  margin-top: 0.5rem;
+}
+
+.remote-mapping ul {
+  max-height: 16rem;
+  overflow: auto;
+}
+
+.remote-mapping code,
+.remote-notice {
+  overflow-wrap: anywhere;
+}
+
+.remote-welcome {
+  max-width: 52rem;
+  margin: 1rem auto;
+}
+
+.remote-local-switch {
+  position: fixed !important;
+  z-index: 20;
+  top: 0.4rem;
+  right: 0.5rem;
+}
+
+.remote-local-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: var(--color-panel);
+}
+
+.remote-panel button,
+.remote-header button {
+  min-height: 2.5rem;
+  white-space: normal;
+  height: auto;
+}
+
+.remote-panel :focus-visible,
+.remote-shell :focus-visible {
+  outline: 3px solid var(--focus-8);
+  outline-offset: 3px;
+}
+
+.remote-preview {
+  max-height: 18rem;
+  overflow: auto;
+}
+
+@media (max-width: 38rem) {
+  .remote-header {
+    align-items: flex-start;
+  }
+  .remote-panel {
+    padding: 0.8rem;
+  }
+  .remote-form input,
+  .remote-form select {
+    font-size: 16px;
+  }
+}

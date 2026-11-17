@@ -1,0 +1,4221 @@
+{
+  "source_sha256": "2c6eef2830c5a86ab7d009d8f5856bfd1ef31829b6797889473ea8bd43f52302",
+  "definitions": {
+    "Id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "OpenHomeId": {
+      "type": "string",
+      "minLength": 22,
+      "maxLength": 23,
+      "pattern": "^(?:[0-9]{4}|[1-9][0-9]{4})-[0-9a-f]{8}-[0-9a-f]{8}$"
+    },
+    "OpenHomeIdentityLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["openhome_id", "pokemon_id", "placement"],
+      "properties": {
+        "openhome_id": {
+          "$ref": "OpenHomeId"
+        },
+        "pokemon_id": {
+          "$ref": "Id"
+        },
+        "placement": {
+          "oneOf": [
+            {
+              "$ref": "SlotAddress"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "maxLength": 40
+    },
+    "Sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "minLength": 64,
+      "maxLength": 64
+    },
+    "VaultETag": {
+      "type": "string",
+      "pattern": "^\"vault-(0|[1-9][0-9]{0,15})\"$",
+      "maxLength": 24
+    },
+    "TradeETag": {
+      "type": "string",
+      "pattern": "^\"trade-(0|[1-9][0-9]{0,15})\"$",
+      "maxLength": 24
+    },
+    "Cursor": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "NextCursor": {
+      "oneOf": [
+        {
+          "$ref": "Cursor"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "Name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "Tag": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "Username": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 32,
+      "pattern": "^[a-z0-9][a-z0-9_-]{2,31}$"
+    },
+    "Password": {
+      "type": "string",
+      "minLength": 12,
+      "maxLength": 128
+    },
+    "BearerToken": {
+      "type": "string",
+      "minLength": 47,
+      "maxLength": 47,
+      "pattern": "^ohs_[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$"
+    },
+    "PokemonFormat": {
+      "type": "string",
+      "enum": [
+        "ohpkm",
+        "pk1",
+        "pk2",
+        "pk3",
+        "pk4",
+        "pk5",
+        "pk6",
+        "pk7",
+        "pb7",
+        "pk8",
+        "pb8",
+        "pa8",
+        "pk9",
+        "pa9"
+      ]
+    },
+    "GamePokemonFormat": {
+      "type": "string",
+      "enum": [
+        "pk1",
+        "pk2",
+        "pk3",
+        "pk4",
+        "pk5",
+        "pk6",
+        "pk7",
+        "pb7",
+        "pk8",
+        "pb8",
+        "pa8",
+        "pk9",
+        "pa9"
+      ]
+    },
+    "SaveFamily": {
+      "type": "string",
+      "enum": [
+        "gen1",
+        "gen2",
+        "gen3",
+        "gen4",
+        "gen5",
+        "gen6",
+        "gen7",
+        "lets_go",
+        "sword_shield",
+        "bdsp",
+        "legends_arceus",
+        "scarlet_violet",
+        "legends_za"
+      ]
+    },
+    "PkmBase64": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 1398104,
+      "contentEncoding": "base64",
+      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+    },
+    "SaveBase64": {
+      "type": "string",
+      "minLength": 4,
+      "maxLength": 22369624,
+      "contentEncoding": "base64",
+      "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+    },
+    "PkmInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_base64", "sha256", "format_hint"],
+      "properties": {
+        "data_base64": {
+          "$ref": "PkmBase64"
+        },
+        "sha256": {
+          "$ref": "Sha256"
+        },
+        "format_hint": {
+          "enum": [
+            "auto",
+            "ohpkm",
+            "pk1",
+            "pk2",
+            "pk3",
+            "pk4",
+            "pk5",
+            "pk6",
+            "pk7",
+            "pb7",
+            "pk8",
+            "pb8",
+            "pa8",
+            "pk9",
+            "pa9"
+          ]
+        }
+      }
+    },
+    "OhpkmInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_base64", "sha256", "format_hint"],
+      "properties": {
+        "data_base64": {
+          "$ref": "PkmBase64"
+        },
+        "sha256": {
+          "$ref": "Sha256"
+        },
+        "format_hint": {
+          "const": "ohpkm"
+        }
+      }
+    },
+    "SaveInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_base64", "sha256", "family_hint"],
+      "properties": {
+        "data_base64": {
+          "$ref": "SaveBase64"
+        },
+        "sha256": {
+          "$ref": "Sha256"
+        },
+        "family_hint": {
+          "enum": [
+            "auto",
+            "gen1",
+            "gen2",
+            "gen3",
+            "gen4",
+            "gen5",
+            "gen6",
+            "gen7",
+            "lets_go",
+            "sword_shield",
+            "bdsp",
+            "legends_arceus",
+            "scarlet_violet",
+            "legends_za"
+          ]
+        }
+      }
+    },
+    "PkmBytes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_base64", "sha256", "byte_length", "format"],
+      "properties": {
+        "data_base64": {
+          "$ref": "PkmBase64"
+        },
+        "sha256": {
+          "$ref": "Sha256"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "format": {
+          "$ref": "PokemonFormat"
+        }
+      }
+    },
+    "OhpkmBytes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_base64", "sha256", "byte_length", "format"],
+      "properties": {
+        "data_base64": {
+          "$ref": "PkmBase64"
+        },
+        "sha256": {
+          "$ref": "Sha256"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "format": {
+          "const": "ohpkm"
+        }
+      }
+    },
+    "SaveBytes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_base64", "sha256", "byte_length", "family"],
+      "properties": {
+        "data_base64": {
+          "$ref": "SaveBase64"
+        },
+        "sha256": {
+          "$ref": "Sha256"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        },
+        "family": {
+          "$ref": "SaveFamily"
+        }
+      }
+    },
+    "DetectedPokemon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "generation"],
+      "properties": {
+        "format": {
+          "$ref": "PokemonFormat"
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9
+        }
+      }
+    },
+    "DetectedSave": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family", "generation", "box_count", "slots_per_box", "party_slots"],
+      "properties": {
+        "family": {
+          "$ref": "SaveFamily"
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9
+        },
+        "box_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "slots_per_box": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "party_slots": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        }
+      }
+    },
+    "Diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "enum": [
+            "field_dropped",
+            "field_changed",
+            "unsupported_metadata",
+            "checksum_repaired",
+            "ambiguous_format"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "field": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "ObservedPokemon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "species",
+        "form",
+        "nickname",
+        "level",
+        "shiny",
+        "moves",
+        "ability",
+        "ribbons",
+        "source_generation"
+      ],
+      "properties": {
+        "species": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "form": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "nickname": {
+          "type": "string",
+          "maxLength": 48
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "shiny": {
+          "type": "boolean"
+        },
+        "moves": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535
+          }
+        },
+        "ability": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ribbons": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535
+          }
+        },
+        "source_generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9
+        }
+      }
+    },
+    "SlotAddress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bank_id", "box_id", "slot"],
+      "properties": {
+        "bank_id": {
+          "$ref": "Id"
+        },
+        "box_id": {
+          "$ref": "Id"
+        },
+        "slot": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 29
+        }
+      }
+    },
+    "SaveSlot": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "box", "slot"],
+          "properties": {
+            "kind": {
+              "const": "box"
+            },
+            "box": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 63
+            },
+            "slot": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 29
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "slot"],
+          "properties": {
+            "kind": {
+              "const": "party"
+            },
+            "slot": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            }
+          }
+        }
+      ]
+    },
+    "Box": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "slots"],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "name": {
+          "$ref": "Name"
+        },
+        "slots": {
+          "type": "array",
+          "minItems": 30,
+          "maxItems": 30,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "Id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Bank": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "boxes"],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "name": {
+          "$ref": "Name"
+        },
+        "boxes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "Box"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["theme", "language", "sort", "snapshot_retention", "default_strategy_id"],
+      "properties": {
+        "theme": {
+          "enum": ["system", "light", "dark"]
+        },
+        "language": {
+          "enum": ["en", "ja", "fr", "de", "it", "es", "ko", "zh-Hans", "zh-Hant"]
+        },
+        "sort": {
+          "enum": ["manual", "species", "nickname", "imported_at"]
+        },
+        "snapshot_retention": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "default_strategy_id": {
+          "oneOf": [
+            {
+              "$ref": "Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ConversionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allow_lossy"],
+      "properties": {
+        "allow_lossy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ConversionStrategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "target_format", "policy"],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "name": {
+          "$ref": "Name"
+        },
+        "target_format": {
+          "$ref": "GamePokemonFormat"
+        },
+        "policy": {
+          "$ref": "ConversionPolicy"
+        }
+      }
+    },
+    "LookupEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_sha256", "pokemon_id"],
+      "properties": {
+        "source_sha256": {
+          "$ref": "Sha256"
+        },
+        "pokemon_id": {
+          "$ref": "Id"
+        }
+      }
+    },
+    "PokemonMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pokemon_id", "favorite", "tags"],
+      "properties": {
+        "pokemon_id": {
+          "$ref": "Id"
+        },
+        "favorite": {
+          "type": "boolean"
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "Tag"
+          }
+        }
+      }
+    },
+    "OpenHomeSourceName": {
+      "oneOf": [
+        {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "OpenHomeBoxLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["box_id", "folder_id", "index", "source_name"],
+      "properties": {
+        "box_id": {
+          "$ref": "Id"
+        },
+        "folder_id": {
+          "$ref": "Id"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 63
+        },
+        "source_name": {
+          "$ref": "OpenHomeSourceName"
+        }
+      }
+    },
+    "OpenHomeBankLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bank_id", "folder_id", "index", "source_name", "current_box", "boxes"],
+      "properties": {
+        "bank_id": {
+          "$ref": "Id"
+        },
+        "folder_id": {
+          "$ref": "Id"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 15
+        },
+        "source_name": {
+          "$ref": "OpenHomeSourceName"
+        },
+        "current_box": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 63
+        },
+        "boxes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "OpenHomeBoxLink"
+          }
+        }
+      }
+    },
+    "OpenHomePokedexEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["species", "form", "level", "games", "extra", "flags", "shiny_leaves"],
+      "properties": {
+        "species": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "form": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "level": {
+          "enum": ["Seen", "Caught", "ShinyCaught"]
+        },
+        "games": {
+          "type": "array",
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          }
+        },
+        "extra": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["radical_red", "unbound", "luminescent_platinum", "compass"]
+          }
+        },
+        "flags": {
+          "type": "array",
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["Male", "Female", "NsPokemon", "Totem", "Gigantamax", "Alpha", "Titan"]
+          }
+        },
+        "shiny_leaves": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        }
+      }
+    },
+    "OpenHomeCompatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "current_bank", "banks", "pokedex_history"],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "current_bank": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 15
+        },
+        "banks": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "OpenHomeBankLink"
+          }
+        },
+        "pokedex_history": {
+          "type": "array",
+          "maxItems": 16384,
+          "items": {
+            "$ref": "OpenHomePokedexEntry"
+          }
+        }
+      }
+    },
+    "VaultContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["banks", "settings", "lookups", "conversion_strategies", "metadata"],
+      "properties": {
+        "banks": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "Bank"
+          }
+        },
+        "settings": {
+          "$ref": "Settings"
+        },
+        "lookups": {
+          "type": "array",
+          "maxItems": 20000,
+          "items": {
+            "$ref": "LookupEntry"
+          }
+        },
+        "conversion_strategies": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "ConversionStrategy"
+          }
+        },
+        "metadata": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "$ref": "PokemonMetadata"
+          }
+        },
+        "openhome_compatibility": {
+          "$ref": "OpenHomeCompatibility"
+        }
+      }
+    },
+    "Reservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation_id", "kind", "resource", "expires_at"],
+      "properties": {
+        "operation_id": {
+          "$ref": "Id"
+        },
+        "kind": {
+          "enum": ["trade", "transfer"]
+        },
+        "resource": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["pokemon_id"],
+              "properties": {
+                "pokemon_id": {
+                  "$ref": "Id"
+                }
+              }
+            },
+            {
+              "$ref": "SlotAddress"
+            }
+          ]
+        },
+        "expires_at": {
+          "oneOf": [
+            {
+              "$ref": "Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "TrackerCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["species", "forms", "moves", "abilities", "ribbons"],
+      "properties": {
+        "species": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "forms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "moves": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "abilities": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        },
+        "ribbons": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535
+        }
+      }
+    },
+    "VaultState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["view", "revision", "content", "pokemon_count", "pokedex", "reservations"],
+      "properties": {
+        "view": {
+          "const": "full"
+        },
+        "revision": {
+          "$ref": "Revision"
+        },
+        "content": {
+          "$ref": "VaultContent"
+        },
+        "pokemon_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "pokedex": {
+          "$ref": "TrackerCounts"
+        },
+        "reservations": {
+          "type": "array",
+          "maxItems": 512,
+          "items": {
+            "$ref": "Reservation"
+          }
+        }
+      }
+    },
+    "BankSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "boxes"],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "name": {
+          "$ref": "Name"
+        },
+        "boxes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name"],
+            "properties": {
+              "id": {
+                "$ref": "Id"
+              },
+              "name": {
+                "$ref": "Name"
+              }
+            }
+          }
+        }
+      }
+    },
+    "VaultOverview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["view", "revision", "banks", "pokemon_count"],
+      "properties": {
+        "view": {
+          "const": "summary"
+        },
+        "revision": {
+          "$ref": "Revision"
+        },
+        "banks": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "$ref": "BankSummary"
+          }
+        },
+        "pokemon_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        }
+      }
+    },
+    "ArtifactSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sha256", "byte_length", "kind", "format", "created_at"],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "sha256": {
+          "$ref": "Sha256"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        },
+        "kind": {
+          "enum": ["original_pkm", "original_save", "canonical_ohpkm", "prepared_save"]
+        },
+        "format": {
+          "oneOf": [
+            {
+              "$ref": "PokemonFormat"
+            },
+            {
+              "$ref": "SaveFamily"
+            }
+          ]
+        },
+        "created_at": {
+          "$ref": "Timestamp"
+        }
+      }
+    },
+    "PokemonRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "observed",
+        "metadata",
+        "original_artifact_ids",
+        "ohpkm_artifact_id",
+        "imported_at"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "observed": {
+          "$ref": "ObservedPokemon"
+        },
+        "metadata": {
+          "$ref": "PokemonMetadata"
+        },
+        "original_artifact_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "Id"
+          }
+        },
+        "ohpkm_artifact_id": {
+          "$ref": "Id"
+        },
+        "imported_at": {
+          "$ref": "Timestamp"
+        }
+      }
+    },
+    "PokemonView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "pokemon", "artifacts"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "pokemon": {
+          "$ref": "PokemonRecord"
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 65,
+          "items": {
+            "$ref": "ArtifactSummary"
+          }
+        }
+      }
+    },
+    "BoxView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["view", "revision", "bank_id", "box", "pokemon", "reservations"],
+      "properties": {
+        "view": {
+          "const": "box"
+        },
+        "revision": {
+          "$ref": "Revision"
+        },
+        "bank_id": {
+          "$ref": "Id"
+        },
+        "box": {
+          "$ref": "Box"
+        },
+        "pokemon": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "$ref": "PokemonRecord"
+          }
+        },
+        "reservations": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "$ref": "Reservation"
+          }
+        }
+      }
+    },
+    "VaultRead": {
+      "oneOf": [
+        {
+          "$ref": "VaultState"
+        },
+        {
+          "$ref": "VaultOverview"
+        },
+        {
+          "$ref": "BoxView"
+        }
+      ]
+    },
+    "PokemonPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "items", "next_cursor"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "PokemonRecord"
+          }
+        },
+        "next_cursor": {
+          "$ref": "NextCursor"
+        }
+      }
+    },
+    "VaultCommand": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "bank"],
+          "properties": {
+            "op": {
+              "const": "bank_put"
+            },
+            "bank": {
+              "$ref": "Bank"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "bank_id"],
+          "properties": {
+            "op": {
+              "const": "bank_delete"
+            },
+            "bank_id": {
+              "$ref": "Id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "bank_id", "box"],
+          "properties": {
+            "op": {
+              "const": "box_put"
+            },
+            "bank_id": {
+              "$ref": "Id"
+            },
+            "box": {
+              "$ref": "Box"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "bank_id", "box_id"],
+          "properties": {
+            "op": {
+              "const": "box_delete"
+            },
+            "bank_id": {
+              "$ref": "Id"
+            },
+            "box_id": {
+              "$ref": "Id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "pokemon_id", "destination"],
+          "properties": {
+            "op": {
+              "const": "pokemon_place"
+            },
+            "pokemon_id": {
+              "$ref": "Id"
+            },
+            "destination": {
+              "oneOf": [
+                {
+                  "$ref": "SlotAddress"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "pokemon_id"],
+          "properties": {
+            "op": {
+              "const": "pokemon_delete"
+            },
+            "pokemon_id": {
+              "$ref": "Id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "metadata"],
+          "properties": {
+            "op": {
+              "const": "metadata_put"
+            },
+            "metadata": {
+              "$ref": "PokemonMetadata"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "settings"],
+          "properties": {
+            "op": {
+              "const": "settings_put"
+            },
+            "settings": {
+              "$ref": "Settings"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "entry"],
+          "properties": {
+            "op": {
+              "const": "lookup_put"
+            },
+            "entry": {
+              "$ref": "LookupEntry"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "source_sha256"],
+          "properties": {
+            "op": {
+              "const": "lookup_delete"
+            },
+            "source_sha256": {
+              "$ref": "Sha256"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "strategy"],
+          "properties": {
+            "op": {
+              "const": "strategy_put"
+            },
+            "strategy": {
+              "$ref": "ConversionStrategy"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "strategy_id"],
+          "properties": {
+            "op": {
+              "const": "strategy_delete"
+            },
+            "strategy_id": {
+              "$ref": "Id"
+            }
+          }
+        }
+      ]
+    },
+    "VaultCommitRequest": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "commands"],
+          "properties": {
+            "mode": {
+              "const": "delta"
+            },
+            "commands": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 128,
+              "items": {
+                "$ref": "VaultCommand"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "state"],
+          "properties": {
+            "mode": {
+              "const": "replace"
+            },
+            "state": {
+              "$ref": "VaultContent"
+            }
+          }
+        }
+      ]
+    },
+    "VaultCommitResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "applied_commands"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "applied_commands": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        }
+      }
+    },
+    "SaveSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "expected_pokemon_sha256", "destination"],
+      "properties": {
+        "source": {
+          "$ref": "SaveSlot"
+        },
+        "expected_pokemon_sha256": {
+          "$ref": "Sha256"
+        },
+        "destination": {
+          "oneOf": [
+            {
+              "$ref": "SlotAddress"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "PokemonImportRequest": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "input", "destination"],
+          "properties": {
+            "kind": {
+              "const": "pkm"
+            },
+            "input": {
+              "$ref": "PkmInput"
+            },
+            "destination": {
+              "oneOf": [
+                {
+                  "$ref": "SlotAddress"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "input", "selections"],
+          "properties": {
+            "kind": {
+              "const": "save"
+            },
+            "input": {
+              "$ref": "SaveInput"
+            },
+            "selections": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "$ref": "SaveSelection"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PokemonImportResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "pokemon", "artifacts"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "pokemon": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "items": {
+            "$ref": "PokemonRecord"
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 61,
+          "items": {
+            "$ref": "ArtifactSummary"
+          }
+        }
+      }
+    },
+    "PokemonExportRequest": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["representation", "artifact_id"],
+          "properties": {
+            "representation": {
+              "const": "original"
+            },
+            "artifact_id": {
+              "$ref": "Id"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["representation"],
+          "properties": {
+            "representation": {
+              "const": "ohpkm"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["representation", "target_format", "policy"],
+          "properties": {
+            "representation": {
+              "const": "converted"
+            },
+            "target_format": {
+              "$ref": "GamePokemonFormat"
+            },
+            "policy": {
+              "$ref": "ConversionPolicy"
+            }
+          }
+        }
+      ]
+    },
+    "PokemonExportResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "output", "losses"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "output": {
+          "$ref": "PkmBytes"
+        },
+        "losses": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "Diagnostic"
+          }
+        }
+      }
+    },
+    "ObservedItem": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["species", "count"],
+          "properties": {
+            "species": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["species", "form", "count"],
+          "properties": {
+            "species": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "form": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 65535
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["move", "count"],
+          "properties": {
+            "move": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ability", "count"],
+          "properties": {
+            "ability": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ribbon", "count"],
+          "properties": {
+            "ribbon": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        }
+      ]
+    },
+    "MetadataPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "kind", "items", "next_cursor", "favorite_count", "tags"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "kind": {
+          "enum": ["species", "forms", "moves", "abilities", "ribbons"]
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "ObservedItem"
+          }
+        },
+        "next_cursor": {
+          "$ref": "NextCursor"
+        },
+        "favorite_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "tags": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tag", "count"],
+            "properties": {
+              "tag": {
+                "$ref": "Tag"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10000
+              }
+            }
+          }
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "username", "role"],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "username": {
+          "$ref": "Username"
+        },
+        "role": {
+          "enum": ["admin", "member"]
+        }
+      }
+    },
+    "BootstrapRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["username", "password", "token"],
+      "properties": {
+        "username": {
+          "$ref": "Username"
+        },
+        "password": {
+          "$ref": "Password"
+        },
+        "token": {
+          "$ref": "BearerToken"
+        }
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["username", "password", "token"],
+      "properties": {
+        "username": {
+          "$ref": "Username"
+        },
+        "password": {
+          "$ref": "Password"
+        },
+        "token": {
+          "$ref": "BearerToken"
+        }
+      }
+    },
+    "CreateUserRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["username", "password", "role"],
+      "properties": {
+        "username": {
+          "$ref": "Username"
+        },
+        "password": {
+          "$ref": "Password"
+        },
+        "role": {
+          "enum": ["admin", "member"]
+        }
+      }
+    },
+    "SessionGrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["user", "session_id", "expires_at", "vault_revision"],
+      "properties": {
+        "user": {
+          "$ref": "User"
+        },
+        "session_id": {
+          "$ref": "Id"
+        },
+        "expires_at": {
+          "$ref": "Timestamp"
+        },
+        "vault_revision": {
+          "$ref": "Revision"
+        }
+      }
+    },
+    "PairingCode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "generation", "code", "expires_at", "attempts_remaining"],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "generation": {
+          "$ref": "Revision"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[0-9]{6}$",
+          "minLength": 6,
+          "maxLength": 6
+        },
+        "expires_at": {
+          "$ref": "Timestamp"
+        },
+        "attempts_remaining": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        }
+      }
+    },
+    "PairClaimRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["username", "code", "name", "token"],
+      "properties": {
+        "username": {
+          "$ref": "Username"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[0-9]{6}$",
+          "minLength": 6,
+          "maxLength": 6
+        },
+        "name": {
+          "$ref": "Name"
+        },
+        "token": {
+          "$ref": "BearerToken"
+        }
+      }
+    },
+    "Device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "created_at", "expires_at", "revoked_at"],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "name": {
+          "$ref": "Name"
+        },
+        "created_at": {
+          "$ref": "Timestamp"
+        },
+        "expires_at": {
+          "$ref": "Timestamp"
+        },
+        "revoked_at": {
+          "oneOf": [
+            {
+              "$ref": "Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "DeviceGrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["user", "device", "vault_revision"],
+      "properties": {
+        "user": {
+          "$ref": "User"
+        },
+        "device": {
+          "$ref": "Device"
+        },
+        "vault_revision": {
+          "$ref": "Revision"
+        }
+      }
+    },
+    "DevicePage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items", "next_cursor"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "Device"
+          }
+        },
+        "next_cursor": {
+          "$ref": "NextCursor"
+        }
+      }
+    },
+    "Snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "source_revision", "created_at", "reason"],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "source_revision": {
+          "$ref": "Revision"
+        },
+        "created_at": {
+          "$ref": "Timestamp"
+        },
+        "reason": {
+          "enum": ["manual", "commit", "import", "restore", "trade", "transfer", "expiry"]
+        }
+      }
+    },
+    "SnapshotPage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "items", "next_cursor"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "$ref": "Snapshot"
+          }
+        },
+        "next_cursor": {
+          "$ref": "NextCursor"
+        }
+      }
+    },
+    "CreateSnapshotRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "maxLength": 64
+        }
+      }
+    },
+    "SnapshotCreated": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "snapshot"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "snapshot": {
+          "$ref": "Snapshot"
+        }
+      }
+    },
+    "RestoreResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "restored_snapshot_id", "id_map"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "restored_snapshot_id": {
+          "$ref": "Id"
+        },
+        "id_map": {
+          "type": "array",
+          "maxItems": 42000,
+          "items": {
+            "$ref": "IdMapping"
+          }
+        }
+      }
+    },
+    "BundleArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "bytes"],
+      "properties": {
+        "artifact": {
+          "$ref": "ArtifactSummary"
+        },
+        "bytes": {
+          "oneOf": [
+            {
+              "$ref": "PkmBytes"
+            },
+            {
+              "$ref": "SaveBytes"
+            }
+          ]
+        }
+      }
+    },
+    "Bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "version", "source_revision", "content", "pokemon", "artifacts"],
+      "properties": {
+        "format": {
+          "const": "openhome-vault-bundle"
+        },
+        "version": {
+          "const": 1
+        },
+        "source_revision": {
+          "$ref": "Revision"
+        },
+        "content": {
+          "$ref": "VaultContent"
+        },
+        "pokemon": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "$ref": "PokemonRecord"
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "maxItems": 30000,
+          "items": {
+            "$ref": "BundleArtifact"
+          }
+        }
+      }
+    },
+    "BundleImportRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "bundle"],
+      "properties": {
+        "mode": {
+          "enum": ["merge", "replace"]
+        },
+        "bundle": {
+          "$ref": "Bundle"
+        }
+      }
+    },
+    "IdMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "source_id", "destination_id"],
+      "properties": {
+        "kind": {
+          "enum": ["pokemon", "artifact", "bank", "box", "strategy"]
+        },
+        "source_id": {
+          "$ref": "Id"
+        },
+        "destination_id": {
+          "$ref": "Id"
+        }
+      }
+    },
+    "BundleImportResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "id_map"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "id_map": {
+          "type": "array",
+          "maxItems": 42000,
+          "items": {
+            "$ref": "IdMapping"
+          }
+        }
+      }
+    },
+    "SaveInspectRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "limit"],
+      "properties": {
+        "input": {
+          "$ref": "SaveInput"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "cursor": {
+          "$ref": "Cursor"
+        }
+      }
+    },
+    "ExtractedPokemon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["original", "ohpkm", "observed"],
+      "properties": {
+        "original": {
+          "$ref": "PkmBytes"
+        },
+        "ohpkm": {
+          "$ref": "OhpkmBytes"
+        },
+        "observed": {
+          "$ref": "ObservedPokemon"
+        }
+      }
+    },
+    "SaveSlotPreview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["location", "pokemon"],
+      "properties": {
+        "location": {
+          "$ref": "SaveSlot"
+        },
+        "pokemon": {
+          "oneOf": [
+            {
+              "$ref": "ExtractedPokemon"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "SaveInspectResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detected", "save_sha256", "slots", "next_cursor", "slot_count"],
+      "properties": {
+        "detected": {
+          "$ref": "DetectedSave"
+        },
+        "save_sha256": {
+          "$ref": "Sha256"
+        },
+        "slots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 30,
+          "items": {
+            "$ref": "SaveSlotPreview"
+          }
+        },
+        "next_cursor": {
+          "$ref": "NextCursor"
+        },
+        "slot_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1926
+        }
+      }
+    },
+    "SaveChange": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "location", "expected_pokemon_sha256"],
+          "properties": {
+            "op": {
+              "const": "remove"
+            },
+            "location": {
+              "$ref": "SaveSlot"
+            },
+            "expected_pokemon_sha256": {
+              "$ref": "Sha256"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "location", "pokemon", "policy"],
+          "properties": {
+            "op": {
+              "const": "insert"
+            },
+            "location": {
+              "$ref": "SaveSlot"
+            },
+            "pokemon": {
+              "$ref": "OhpkmInput"
+            },
+            "policy": {
+              "$ref": "ConversionPolicy"
+            }
+          }
+        }
+      ]
+    },
+    "SavePrepareResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detected", "output", "removed", "inserted", "warnings"],
+      "properties": {
+        "detected": {
+          "$ref": "DetectedSave"
+        },
+        "output": {
+          "$ref": "SaveBytes"
+        },
+        "removed": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["location", "pokemon"],
+            "properties": {
+              "location": {
+                "$ref": "SaveSlot"
+              },
+              "pokemon": {
+                "$ref": "ExtractedPokemon"
+              }
+            }
+          }
+        },
+        "inserted": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["location", "source_sha256", "stored_sha256", "losses"],
+            "properties": {
+              "location": {
+                "$ref": "SaveSlot"
+              },
+              "source_sha256": {
+                "$ref": "Sha256"
+              },
+              "stored_sha256": {
+                "$ref": "Sha256"
+              },
+              "losses": {
+                "type": "array",
+                "maxItems": 256,
+                "items": {
+                  "$ref": "Diagnostic"
+                }
+              }
+            }
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "$ref": "Diagnostic"
+          }
+        }
+      }
+    },
+    "TransferPlan": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["direction", "entries"],
+          "properties": {
+            "direction": {
+              "const": "deposit"
+            },
+            "entries": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "$ref": "SaveSelection"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["direction", "entries"],
+          "properties": {
+            "direction": {
+              "const": "withdraw"
+            },
+            "entries": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 30,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["pokemon_id", "destination", "policy"],
+                "properties": {
+                  "pokemon_id": {
+                    "$ref": "Id"
+                  },
+                  "destination": {
+                    "$ref": "SaveSlot"
+                  },
+                  "policy": {
+                    "$ref": "ConversionPolicy"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PrepareTransferRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transfer_id", "original_save", "source", "plan"],
+      "properties": {
+        "transfer_id": {
+          "$ref": "Id"
+        },
+        "original_save": {
+          "$ref": "SaveInput"
+        },
+        "source": {
+          "enum": ["sd_export", "3ds_cartridge", "3ds_digital", "3ds_vc"]
+        },
+        "plan": {
+          "$ref": "TransferPlan"
+        }
+      }
+    },
+    "TransferAction": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "action",
+            "original_sha256",
+            "prepared_sha256",
+            "observed_local_sha256",
+            "verified_backup_sha256"
+          ],
+          "properties": {
+            "action": {
+              "const": "local_applied"
+            },
+            "original_sha256": {
+              "$ref": "Sha256"
+            },
+            "prepared_sha256": {
+              "$ref": "Sha256"
+            },
+            "observed_local_sha256": {
+              "$ref": "Sha256"
+            },
+            "verified_backup_sha256": {
+              "$ref": "Sha256"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action"],
+          "properties": {
+            "action": {
+              "const": "finalize"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "observed_local_sha256", "verified_backup_sha256"],
+          "properties": {
+            "action": {
+              "enum": ["reconcile", "cancel"]
+            },
+            "observed_local_sha256": {
+              "$ref": "Sha256"
+            },
+            "verified_backup_sha256": {
+              "$ref": "Sha256"
+            }
+          }
+        }
+      ]
+    },
+    "TransferOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "imported_pokemon_ids", "removed_pokemon_ids", "finalized_at"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "imported_pokemon_ids": {
+          "type": "array",
+          "maxItems": 30,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "Id"
+          }
+        },
+        "removed_pokemon_ids": {
+          "type": "array",
+          "maxItems": 30,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "Id"
+          }
+        },
+        "finalized_at": {
+          "$ref": "Timestamp"
+        }
+      }
+    },
+    "TransferRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "state",
+        "plan",
+        "write_authorized",
+        "original_save",
+        "prepared_save",
+        "expires_at",
+        "local_applied_at",
+        "outcome",
+        "recovery"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "state": {
+          "enum": [
+            "PREPARED",
+            "LOCAL_APPLIED",
+            "RECONCILE_REQUIRED",
+            "FINALIZED",
+            "CANCELLED",
+            "EXPIRED"
+          ]
+        },
+        "plan": {
+          "$ref": "TransferPlan"
+        },
+        "write_authorized": {
+          "type": "boolean"
+        },
+        "original_save": {
+          "$ref": "ArtifactSummary"
+        },
+        "prepared_save": {
+          "$ref": "ArtifactSummary"
+        },
+        "expires_at": {
+          "$ref": "Timestamp"
+        },
+        "local_applied_at": {
+          "oneOf": [
+            {
+              "$ref": "Timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outcome": {
+          "oneOf": [
+            {
+              "$ref": "TransferOutcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "recovery": {
+          "enum": ["none", "verify_local", "restore_original_or_copy_import"]
+        }
+      }
+    },
+    "TransferView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "transfer"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "transfer": {
+          "$ref": "TransferRecord"
+        },
+        "artifact": {
+          "$ref": "SaveBytes"
+        }
+      }
+    },
+    "TradeParticipant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["user", "offer", "confirmed_offer_version"],
+      "properties": {
+        "user": {
+          "$ref": "User"
+        },
+        "offer": {
+          "type": "array",
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["pokemon_id", "observed"],
+            "properties": {
+              "pokemon_id": {
+                "$ref": "Id"
+              },
+              "observed": {
+                "$ref": "ObservedPokemon"
+              }
+            }
+          }
+        },
+        "confirmed_offer_version": {
+          "oneOf": [
+            {
+              "$ref": "Revision"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Trade": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "revision",
+        "offer_version",
+        "state",
+        "participants",
+        "expires_at",
+        "outcome"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "Id"
+        },
+        "revision": {
+          "$ref": "Revision"
+        },
+        "offer_version": {
+          "$ref": "Revision"
+        },
+        "state": {
+          "enum": ["WAITING", "OPEN", "COMMITTED", "CANCELLED", "EXPIRED"]
+        },
+        "participants": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "$ref": "TradeParticipant"
+          }
+        },
+        "expires_at": {
+          "$ref": "Timestamp"
+        },
+        "outcome": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["committed_at", "vaults"],
+              "properties": {
+                "committed_at": {
+                  "$ref": "Timestamp"
+                },
+                "vaults": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["user_id", "revision", "received_pokemon_ids"],
+                    "properties": {
+                      "user_id": {
+                        "$ref": "Id"
+                      },
+                      "revision": {
+                        "$ref": "Revision"
+                      },
+                      "received_pokemon_ids": {
+                        "type": "array",
+                        "maxItems": 6,
+                        "uniqueItems": true,
+                        "items": {
+                          "$ref": "Id"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "TradeView": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trade"],
+      "properties": {
+        "trade": {
+          "$ref": "Trade"
+        }
+      }
+    },
+    "TradeCreated": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trade", "join_code"],
+      "properties": {
+        "trade": {
+          "$ref": "Trade"
+        },
+        "join_code": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 12,
+          "pattern": "^[A-HJ-NP-Z2-9]{12}$"
+        }
+      }
+    },
+    "TradeJoinRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["join_code"],
+      "properties": {
+        "join_code": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 12,
+          "pattern": "^[A-HJ-NP-Z2-9]{12}$"
+        }
+      }
+    },
+    "TradeAction": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "vault_if_match", "pokemon_ids"],
+          "properties": {
+            "action": {
+              "const": "offer"
+            },
+            "vault_if_match": {
+              "$ref": "VaultETag"
+            },
+            "pokemon_ids": {
+              "type": "array",
+              "maxItems": 6,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "Id"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action", "vault_if_match", "offer_version"],
+          "properties": {
+            "action": {
+              "const": "confirm"
+            },
+            "vault_if_match": {
+              "$ref": "VaultETag"
+            },
+            "offer_version": {
+              "$ref": "Revision"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action"],
+          "properties": {
+            "action": {
+              "const": "cancel"
+            }
+          }
+        }
+      ]
+    },
+    "Empty": {
+      "type": "object",
+      "additionalProperties": false,
+      "maxProperties": 0
+    },
+    "Limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pkm_bytes",
+        "save_bytes",
+        "worker_line_bytes",
+        "normal_body_bytes",
+        "save_body_bytes",
+        "bundle_body_bytes",
+        "vault_blob_bytes",
+        "vault_metadata_bytes",
+        "pokemon_per_vault",
+        "page_size"
+      ],
+      "properties": {
+        "pkm_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "save_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        },
+        "worker_line_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 33554432
+        },
+        "normal_body_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4194304
+        },
+        "save_body_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 33554432
+        },
+        "bundle_body_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 201326592
+        },
+        "vault_blob_bytes": {
+          "type": "integer",
+          "minimum": 16777216,
+          "maximum": 134217728
+        },
+        "vault_metadata_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        },
+        "pokemon_per_vault": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "page_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "EngineCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation", "input_format", "output_formats"],
+      "properties": {
+        "operation": {
+          "enum": ["inspect_pkm", "import_pkm", "convert_pkm", "inspect_save", "prepare_save"]
+        },
+        "input_format": {
+          "oneOf": [
+            {
+              "$ref": "PokemonFormat"
+            },
+            {
+              "$ref": "SaveFamily"
+            }
+          ]
+        },
+        "output_formats": {
+          "type": "array",
+          "maxItems": 14,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "PokemonFormat"
+          }
+        }
+      }
+    },
+    "Status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["api_version", "ready", "limits", "engine", "features"],
+      "properties": {
+        "api_version": {
+          "const": "v1"
+        },
+        "ready": {
+          "const": true
+        },
+        "limits": {
+          "$ref": "Limits"
+        },
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["upstream_revision", "worker_version", "capabilities"],
+          "properties": {
+            "upstream_revision": {
+              "type": "string",
+              "minLength": 40,
+              "maxLength": 40,
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "worker_version": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "capabilities": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 256,
+              "items": {
+                "$ref": "EngineCapability"
+              }
+            }
+          }
+        },
+        "features": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["native_writes_enabled", "native_write_families"],
+          "properties": {
+            "native_writes_enabled": {
+              "type": "boolean"
+            },
+            "native_write_families": {
+              "type": "array",
+              "maxItems": 13,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "SaveFamily"
+              }
+            }
+          }
+        }
+      }
+    },
+    "Health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "const": "alive"
+        }
+      }
+    },
+    "ErrorCode": {
+      "enum": [
+        "invalid_request",
+        "invalid_bytes",
+        "checksum_mismatch",
+        "unauthorized",
+        "forbidden",
+        "not_found",
+        "stale_revision",
+        "idempotency_conflict",
+        "resource_conflict",
+        "resource_reserved",
+        "invalid_state",
+        "already_bootstrapped",
+        "precondition_required",
+        "rate_limited",
+        "limit_exceeded",
+        "unsupported_format",
+        "unsupported_conversion",
+        "storage_unavailable",
+        "engine_unavailable",
+        "setup_unavailable",
+        "native_writes_disabled",
+        "internal_error"
+      ]
+    },
+    "ErrorDetails": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "fields"],
+          "properties": {
+            "kind": {
+              "const": "validation"
+            },
+            "fields": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["pointer", "reason"],
+                "properties": {
+                  "pointer": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "pattern": "^(|/.*)$"
+                  },
+                  "reason": {
+                    "enum": [
+                      "required",
+                      "type",
+                      "range",
+                      "format",
+                      "unknown_field",
+                      "duplicate",
+                      "reference",
+                      "digest"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "current_etag"],
+          "properties": {
+            "kind": {
+              "const": "revision"
+            },
+            "current_etag": {
+              "oneOf": [
+                {
+                  "$ref": "VaultETag"
+                },
+                {
+                  "$ref": "TradeETag"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "missing_headers"],
+          "properties": {
+            "kind": {
+              "const": "precondition"
+            },
+            "missing_headers": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 2,
+              "uniqueItems": true,
+              "items": {
+                "enum": ["If-Match", "Idempotency-Key"]
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "limit", "maximum"],
+          "properties": {
+            "kind": {
+              "const": "limit"
+            },
+            "limit": {
+              "enum": [
+                "body_bytes",
+                "decoded_bytes",
+                "vault_blob_bytes",
+                "vault_metadata_bytes",
+                "pokemon_count",
+                "pending_operations",
+                "output_bytes"
+              ]
+            },
+            "maximum": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 201326592
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "operation", "reason"],
+          "properties": {
+            "kind": {
+              "const": "unsupported"
+            },
+            "operation": {
+              "enum": ["inspect_pkm", "import_pkm", "convert_pkm", "inspect_save", "prepare_save"]
+            },
+            "reason": {
+              "enum": [
+                "unrecognized_family",
+                "not_supported",
+                "loss_disallowed",
+                "ambiguous",
+                "encrypted_input"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "transfer_id", "recovery"],
+          "properties": {
+            "kind": {
+              "const": "recovery"
+            },
+            "transfer_id": {
+              "$ref": "Id"
+            },
+            "recovery": {
+              "const": "restore_original_or_copy_import"
+            }
+          }
+        }
+      ]
+    },
+    "Error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["error"],
+      "properties": {
+        "error": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "message"],
+          "properties": {
+            "code": {
+              "$ref": "ErrorCode"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "details": {
+              "$ref": "ErrorDetails"
+            }
+          }
+        }
+      }
+    },
+    "EventAuthenticate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "token"],
+      "properties": {
+        "type": {
+          "const": "authenticate"
+        },
+        "token": {
+          "$ref": "BearerToken"
+        },
+        "after_sequence": {
+          "$ref": "Revision"
+        }
+      }
+    },
+    "EventPing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "nonce"],
+      "properties": {
+        "type": {
+          "const": "ping"
+        },
+        "nonce": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        }
+      }
+    },
+    "EventClientFrame": {
+      "oneOf": [
+        {
+          "$ref": "EventAuthenticate"
+        },
+        {
+          "$ref": "EventPing"
+        }
+      ]
+    },
+    "EventAuthenticated": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "principal_id", "sequence", "revision"],
+      "properties": {
+        "type": {
+          "const": "authenticated"
+        },
+        "principal_id": {
+          "$ref": "Id"
+        },
+        "sequence": {
+          "$ref": "Revision"
+        },
+        "revision": {
+          "$ref": "Revision"
+        }
+      }
+    },
+    "EventVaultChanged": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "sequence", "revision", "cause"],
+      "properties": {
+        "type": {
+          "const": "vault_changed"
+        },
+        "sequence": {
+          "$ref": "Revision"
+        },
+        "revision": {
+          "$ref": "Revision"
+        },
+        "cause": {
+          "enum": ["commit", "import", "snapshot", "restore", "trade", "transfer", "expiry"]
+        }
+      }
+    },
+    "EventTradeChanged": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "sequence", "trade_id", "trade_revision"],
+      "properties": {
+        "type": {
+          "const": "trade_changed"
+        },
+        "sequence": {
+          "$ref": "Revision"
+        },
+        "trade_id": {
+          "$ref": "Id"
+        },
+        "trade_revision": {
+          "$ref": "Revision"
+        }
+      }
+    },
+    "EventTransferChanged": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "sequence", "transfer_id", "revision"],
+      "properties": {
+        "type": {
+          "const": "transfer_changed"
+        },
+        "sequence": {
+          "$ref": "Revision"
+        },
+        "transfer_id": {
+          "$ref": "Id"
+        },
+        "revision": {
+          "$ref": "Revision"
+        }
+      }
+    },
+    "EventDevicesChanged": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "sequence"],
+      "properties": {
+        "type": {
+          "const": "devices_changed"
+        },
+        "sequence": {
+          "$ref": "Revision"
+        }
+      }
+    },
+    "EventResyncRequired": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "sequence", "revision", "reason"],
+      "properties": {
+        "type": {
+          "const": "resync_required"
+        },
+        "sequence": {
+          "$ref": "Revision"
+        },
+        "revision": {
+          "$ref": "Revision"
+        },
+        "reason": {
+          "enum": ["retention_gap", "future_sequence", "client_request", "scope_filter"]
+        }
+      }
+    },
+    "EventPong": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "nonce"],
+      "properties": {
+        "type": {
+          "const": "pong"
+        },
+        "nonce": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        }
+      }
+    },
+    "EventServerFrame": {
+      "oneOf": [
+        {
+          "$ref": "EventAuthenticated"
+        },
+        {
+          "$ref": "EventVaultChanged"
+        },
+        {
+          "$ref": "EventTradeChanged"
+        },
+        {
+          "$ref": "EventTransferChanged"
+        },
+        {
+          "$ref": "EventDevicesChanged"
+        },
+        {
+          "$ref": "EventResyncRequired"
+        },
+        {
+          "$ref": "EventPong"
+        }
+      ]
+    }
+  },
+  "operations": {
+    "health": {
+      "method": "GET",
+      "path": "/healthz",
+      "auth": "none",
+      "durable": false,
+      "revision": "none",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "Health"
+      }
+    },
+    "getStatus": {
+      "method": "GET",
+      "path": "/api/v1/status",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "none",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "Status"
+      }
+    },
+    "bootstrap": {
+      "method": "POST",
+      "path": "/api/v1/auth/bootstrap",
+      "auth": "setup",
+      "durable": true,
+      "revision": "none",
+      "bodyMaxBytes": 4096,
+      "status": 201,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "BootstrapRequest"
+      },
+      "outputSchema": {
+        "$ref": "SessionGrant"
+      }
+    },
+    "login": {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "auth": "none",
+      "durable": true,
+      "revision": "none",
+      "bodyMaxBytes": 4096,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "LoginRequest"
+      },
+      "outputSchema": {
+        "$ref": "SessionGrant"
+      }
+    },
+    "logout": {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "none",
+      "bodyMaxBytes": 2,
+      "status": 204,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "Empty"
+      }
+    },
+    "createUser": {
+      "method": "POST",
+      "path": "/api/v1/auth/users",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "none",
+      "bodyMaxBytes": 4096,
+      "status": 201,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "CreateUserRequest"
+      },
+      "outputSchema": {
+        "$ref": "User"
+      }
+    },
+    "createPairingCode": {
+      "method": "POST",
+      "path": "/api/v1/pairing/codes",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "none",
+      "bodyMaxBytes": 2,
+      "status": 201,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "Empty"
+      },
+      "outputSchema": {
+        "$ref": "PairingCode"
+      }
+    },
+    "claimPairingCode": {
+      "method": "POST",
+      "path": "/api/v1/pairing/claim",
+      "auth": "none",
+      "durable": true,
+      "revision": "none",
+      "bodyMaxBytes": 4096,
+      "status": 201,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "PairClaimRequest"
+      },
+      "outputSchema": {
+        "$ref": "DeviceGrant"
+      }
+    },
+    "listDevices": {
+      "method": "GET",
+      "path": "/api/v1/devices",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "none",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "$ref": "Cursor"
+          }
+        },
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "DevicePage"
+      }
+    },
+    "revokeDevice": {
+      "method": "DELETE",
+      "path": "/api/v1/devices/{device_id}",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "none",
+      "bodyMaxBytes": 0,
+      "status": 204,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "device_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": ["device_id"]
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      }
+    },
+    "getVault": {
+      "method": "GET",
+      "path": "/api/v1/vault",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "vault",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "view": {
+            "enum": ["full", "summary", "box"]
+          },
+          "bank_id": {
+            "$ref": "Id"
+          },
+          "box_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "VaultRead"
+      },
+      "etag": "vault"
+    },
+    "commitVault": {
+      "method": "POST",
+      "path": "/api/v1/vault/commit",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "vault",
+      "bodyMaxBytes": 4194304,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "VaultCommitRequest"
+      },
+      "outputSchema": {
+        "$ref": "VaultCommitResult"
+      },
+      "etag": "vault"
+    },
+    "listPokemon": {
+      "method": "GET",
+      "path": "/api/v1/pokemon",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "vault",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "$ref": "Cursor"
+          },
+          "at_revision": {
+            "$ref": "Revision"
+          },
+          "q": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "tag": {
+            "$ref": "Tag"
+          },
+          "favorite": {
+            "type": "boolean"
+          },
+          "species": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535
+          },
+          "form": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "unplaced": {
+            "type": "boolean"
+          }
+        },
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "PokemonPage"
+      },
+      "etag": "vault"
+    },
+    "importPokemon": {
+      "method": "POST",
+      "path": "/api/v1/pokemon/import",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "vault",
+      "bodyMaxBytes": 33554432,
+      "status": 201,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "PokemonImportRequest"
+      },
+      "outputSchema": {
+        "$ref": "PokemonImportResult"
+      },
+      "etag": "vault"
+    },
+    "getPokemon": {
+      "method": "GET",
+      "path": "/api/v1/pokemon/{pokemon_id}",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "vault",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pokemon_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": ["pokemon_id"]
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "PokemonView"
+      },
+      "etag": "vault"
+    },
+    "exportPokemon": {
+      "method": "POST",
+      "path": "/api/v1/pokemon/{pokemon_id}/export",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "vault",
+      "bodyMaxBytes": 4096,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pokemon_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": ["pokemon_id"]
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "PokemonExportRequest"
+      },
+      "outputSchema": {
+        "$ref": "PokemonExportResult"
+      },
+      "etag": "vault"
+    },
+    "getMetadata": {
+      "method": "GET",
+      "path": "/api/v1/metadata",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "vault",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "$ref": "Cursor"
+          },
+          "at_revision": {
+            "$ref": "Revision"
+          },
+          "kind": {
+            "enum": ["species", "forms", "moves", "abilities", "ribbons"]
+          }
+        },
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "MetadataPage"
+      },
+      "etag": "vault"
+    },
+    "inspectSave": {
+      "method": "POST",
+      "path": "/api/v1/saves/inspect",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "none",
+      "bodyMaxBytes": 33554432,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "SaveInspectRequest"
+      },
+      "outputSchema": {
+        "$ref": "SaveInspectResult"
+      }
+    },
+    "listSnapshots": {
+      "method": "GET",
+      "path": "/api/v1/snapshots",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "vault",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "$ref": "Cursor"
+          },
+          "at_revision": {
+            "$ref": "Revision"
+          }
+        },
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "SnapshotPage"
+      },
+      "etag": "vault"
+    },
+    "createSnapshot": {
+      "method": "POST",
+      "path": "/api/v1/snapshots",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "vault",
+      "bodyMaxBytes": 4096,
+      "status": 201,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "CreateSnapshotRequest"
+      },
+      "outputSchema": {
+        "$ref": "SnapshotCreated"
+      },
+      "etag": "vault"
+    },
+    "restoreSnapshot": {
+      "method": "POST",
+      "path": "/api/v1/snapshots/{snapshot_id}/restore",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "vault",
+      "bodyMaxBytes": 2,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "snapshot_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": ["snapshot_id"]
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "Empty"
+      },
+      "outputSchema": {
+        "$ref": "RestoreResult"
+      },
+      "etag": "vault"
+    },
+    "exportSnapshot": {
+      "method": "GET",
+      "path": "/api/v1/snapshots/{snapshot_id}/export",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "none",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "snapshot_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": ["snapshot_id"]
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "Bundle"
+      }
+    },
+    "exportBundle": {
+      "method": "GET",
+      "path": "/api/v1/bundles/export",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "vault",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "Bundle"
+      },
+      "etag": "vault"
+    },
+    "importBundle": {
+      "method": "POST",
+      "path": "/api/v1/bundles/import",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "vault",
+      "bodyMaxBytes": 201326592,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "BundleImportRequest"
+      },
+      "outputSchema": {
+        "$ref": "BundleImportResult"
+      },
+      "etag": "vault"
+    },
+    "createTrade": {
+      "method": "POST",
+      "path": "/api/v1/trades",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "none",
+      "bodyMaxBytes": 2,
+      "status": 201,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "Empty"
+      },
+      "outputSchema": {
+        "$ref": "TradeCreated"
+      },
+      "etag": "trade"
+    },
+    "joinTrade": {
+      "method": "POST",
+      "path": "/api/v1/trades/join",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "none",
+      "bodyMaxBytes": 4096,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "TradeJoinRequest"
+      },
+      "outputSchema": {
+        "$ref": "TradeView"
+      },
+      "etag": "trade"
+    },
+    "getTrade": {
+      "method": "GET",
+      "path": "/api/v1/trades/{trade_id}",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "trade",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "trade_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": ["trade_id"]
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "TradeView"
+      },
+      "etag": "trade"
+    },
+    "actOnTrade": {
+      "method": "POST",
+      "path": "/api/v1/trades/{trade_id}/actions",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "trade",
+      "bodyMaxBytes": 4096,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "trade_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": ["trade_id"]
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "TradeAction"
+      },
+      "outputSchema": {
+        "$ref": "TradeView"
+      },
+      "etag": "trade"
+    },
+    "prepareTransfer": {
+      "method": "POST",
+      "path": "/api/v1/transfers",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "vault",
+      "bodyMaxBytes": 33554432,
+      "status": 201,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "PrepareTransferRequest"
+      },
+      "outputSchema": {
+        "allOf": [
+          {
+            "$ref": "TransferView"
+          },
+          {
+            "required": ["artifact"]
+          }
+        ]
+      },
+      "etag": "vault"
+    },
+    "getTransfer": {
+      "method": "GET",
+      "path": "/api/v1/transfers/{transfer_id}",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "vault",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "transfer_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": ["transfer_id"]
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "artifact": {
+            "enum": ["none", "original", "prepared"]
+          }
+        },
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "TransferView"
+      },
+      "etag": "vault"
+    },
+    "actOnTransfer": {
+      "method": "POST",
+      "path": "/api/v1/transfers/{transfer_id}/actions",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "vault",
+      "bodyMaxBytes": 4096,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "transfer_id": {
+            "$ref": "Id"
+          }
+        },
+        "required": ["transfer_id"]
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "TransferAction"
+      },
+      "outputSchema": {
+        "$ref": "TransferView"
+      },
+      "etag": "vault"
+    }
+  }
+}

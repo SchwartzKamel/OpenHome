@@ -66,7 +66,18 @@ export type OhpkmStore = Record<string, OHPKM>
 
 export type ItemBag = Record<string, number>
 
+export interface BackendCapabilities {
+  kind: 'local' | 'remote'
+  vaultSlotsPerBox: number
+  plugins: boolean
+  arbitraryServerFiles: boolean
+  atomicLocalSaveAndVault: boolean
+  unavailable: Readonly<Record<string, string>>
+}
+
 export default interface BackendInterface {
+  readonly capabilities?: BackendCapabilities
+
   /* past gen identifier lookups */
   loadLookups: () => Promise<Result<StoredLookups>>
   addToLookups: (new_entries: StoredLookups) => Promise<Result<null>>

@@ -1,0 +1,366 @@
+.hh-workspace {
+  width: 100%;
+  max-width: 100rem;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  color: var(--gray-12, #24262d);
+  overflow: auto;
+  line-height: 1.5;
+  text-align: left;
+  height: 100%;
+}
+.hh-workspace [hidden] {
+  display: none !important;
+}
+.hh-workspace h1,
+.hh-workspace h2,
+.hh-workspace h3,
+.hh-workspace h4 {
+  margin: 0.5rem 0;
+  line-height: 1.3;
+}
+.hh-workspace h1 {
+  font-size: 1.8rem;
+}
+.hh-workspace h2 {
+  font-size: 1.3rem;
+}
+.hh-workspace h3 {
+  font-size: 1.1rem;
+}
+.hh-workspace p {
+  margin: 0.6rem 0;
+}
+.hh-workspace .hh-workspace-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.hh-workspace .hh-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.hh-workspace .hh-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+.hh-workspace .hh-grid-row {
+  display: contents;
+}
+.hh-workspace .hh-grid [role='gridcell'] {
+  min-width: 0;
+}
+.hh-workspace .hh-grid .hh-slot {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-height: 7rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-wrap: anywhere;
+}
+.hh-workspace .hh-slot-number {
+  align-self: flex-start;
+  color: var(--gray-11, #555);
+  font-size: 0.7rem;
+}
+.hh-workspace .hh-slot-occupied {
+  background: var(--gray-3, #f3f3f3);
+}
+.hh-workspace .hh-star {
+  position: absolute;
+  right: 0.3rem;
+  top: 0.1rem;
+  color: var(--amber-11, #8a6400);
+}
+.hh-workspace button,
+.hh-workspace input,
+.hh-workspace select {
+  font: inherit;
+}
+.hh-workspace label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.hh-workspace input:not([type='checkbox'], [type='radio']),
+.hh-workspace select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 1px solid var(--gray-7, #aaa);
+  border-radius: 0.4rem;
+  background: var(--color-background, white);
+  color: inherit;
+}
+.hh-workspace input[type='checkbox'],
+.hh-workspace input[type='radio'] {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--red-9, #c33);
+}
+.hh-workspace .hh-check {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+.hh-workspace button {
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 1px solid var(--gray-7, #aaa);
+  border-radius: 0.4rem;
+  background: var(--gray-2, #fafafa);
+  color: inherit;
+  cursor: pointer;
+}
+.hh-workspace button:hover:not(:disabled) {
+  background: var(--gray-4, #eee);
+}
+.hh-workspace button[aria-pressed='true'] {
+  outline: 2px solid var(--red-9, #c33);
+}
+.hh-workspace button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.hh-workspace :focus-visible {
+  outline: 3px solid var(--red-9, #c33);
+  outline-offset: 2px;
+}
+.hh-workspace .hh-workflow-nav {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.75rem 0.2rem;
+  margin: 1rem 0;
+  border-bottom: 1px solid var(--gray-6, #ddd);
+}
+.hh-workspace .hh-workflow-nav button {
+  flex-shrink: 0;
+}
+.hh-workspace .hh-collection-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.5fr);
+  align-items: start;
+  gap: 1rem;
+}
+.hh-workspace .hh-card {
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid var(--gray-6, #ddd);
+  border-radius: 0.6rem;
+  background: var(--color-panel-solid, #fff);
+  min-width: 0;
+}
+.hh-workspace .hh-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  align-items: end;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+.hh-workspace form > button {
+  margin-top: 0.5rem;
+}
+.hh-workspace .hh-record-list,
+.hh-workspace .hh-offer-choices,
+.hh-workspace .hh-save-slots,
+.hh-workspace .hh-participants {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+.hh-workspace .hh-save-slots {
+  max-height: 32rem;
+  overflow-y: auto;
+}
+.hh-workspace .hh-save-slot {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--gray-6, #ddd);
+  border-radius: 0.4rem;
+}
+.hh-workspace .hh-record-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+}
+.hh-workspace .hh-pokemon {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.hh-workspace .hh-pokemon-compact {
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.8rem;
+}
+.hh-workspace .hh-pokemon small,
+.hh-workspace .hh-facts small {
+  display: block;
+}
+.hh-workspace .hh-pokemon-icon {
+  display: block;
+  width: 3rem;
+  height: 2.5rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+.hh-workspace .hh-facts {
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.35fr) minmax(0, 1fr);
+  gap: 0.5rem;
+}
+.hh-workspace .hh-facts dt {
+  color: var(--gray-11, #555);
+}
+.hh-workspace .hh-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.hh-workspace .hh-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+.hh-workspace .hh-labels li,
+.hh-workspace .hh-labels > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 1rem;
+  background: var(--gray-4, #eee);
+}
+.hh-workspace .hh-labels li button {
+  padding: 0 0.5rem;
+}
+.hh-workspace .hh-help,
+.hh-workspace .hh-id,
+.hh-workspace small {
+  color: var(--gray-11, #555);
+  font-size: 0.85rem;
+}
+.hh-workspace .hh-id,
+.hh-workspace .hh-digest {
+  display: block;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+.hh-workspace .hh-warning,
+.hh-workspace .hh-error,
+.hh-workspace .hh-success,
+.hh-workspace .hh-editing,
+.hh-workspace .hh-result {
+  padding: 0.8rem;
+  margin: 0.75rem 0;
+  border: 1px solid var(--amber-7, #d6aa32);
+  border-radius: 0.4rem;
+  background: var(--amber-2, #fff9e6);
+  color: var(--gray-12, #24262d);
+  overflow-wrap: anywhere;
+}
+.hh-workspace .hh-error {
+  border-color: var(--red-7, #db8d8d);
+  background: var(--red-2, #fff3f3);
+}
+.hh-workspace .hh-success {
+  border-color: var(--green-7, #80b68e);
+  background: var(--green-2, #f0fff4);
+}
+.hh-workspace .hh-editing,
+.hh-workspace .hh-result {
+  border-color: var(--blue-7, #83accf);
+  background: var(--blue-2, #f2f8ff);
+}
+.hh-workspace .hh-upload {
+  padding: 0.75rem;
+  margin: 0.75rem 0;
+  border: 2px dashed var(--gray-7, #aaa);
+  border-radius: 0.4rem;
+}
+.hh-workspace .hh-dragging {
+  border-color: var(--red-9, #c33);
+  background: var(--red-2, #fff3f3);
+}
+.hh-workspace .hh-tracker-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.hh-workspace .hh-tracker-counts > div {
+  padding: 0.75rem 1rem;
+  border-radius: 0.4rem;
+  background: var(--gray-3, #f5f5f5);
+}
+.hh-workspace .hh-tracker-counts dd {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+.hh-workspace .hh-table-scroll {
+  overflow: auto;
+}
+.hh-workspace table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.hh-workspace td,
+.hh-workspace th {
+  text-align: left;
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--gray-6, #ddd);
+}
+.hh-workspace pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.hh-workspace summary {
+  cursor: pointer;
+  min-height: 2.75rem;
+}
+@media (max-width: 64rem) {
+  .hh-workspace .hh-collection-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 36rem) {
+  .hh-workspace {
+    padding: 0.5rem;
+  }
+  .hh-workspace .hh-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.2rem;
+  }
+  .hh-workspace .hh-grid .hh-slot {
+    min-height: 6rem;
+    font-size: 0.7rem;
+    padding: 0.15rem;
+  }
+  .hh-workspace .hh-pokemon-compact {
+    font-size: 0.65rem;
+  }
+  .hh-workspace .hh-card {
+    padding: 0.75rem;
+  }
+}
