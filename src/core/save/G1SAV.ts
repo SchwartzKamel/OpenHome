@@ -218,17 +218,6 @@ export class G1SAV extends OfficialSAV<PK1> {
       }
       // set all dex numbers to 0xFF or add terminator
       this.bytes.set(new Uint8Array(remainingSlots + 1).fill(0xff), boxByteOffset + 1 + numMons)
-      let boxChecksumOffset
-
-      if (boxNumber < 6) {
-        boxChecksumOffset = 0x5a4d + boxNumber
-      } else {
-        boxChecksumOffset = 0x7a4d + boxNumber
-      }
-      const boxChecksum =
-        xorChecksum8BitLe(this.bytes, boxByteOffset, boxByteOffset + this.BOX_SIZE) ^ 0xff
-
-      this.bytes[boxChecksumOffset] = boxChecksum
       if (boxNumber === this.currentPCBox) {
         this.bytes.set(
           this.bytes.slice(boxByteOffset, boxByteOffset + this.BOX_SIZE),
@@ -236,13 +225,24 @@ export class G1SAV extends OfficialSAV<PK1> {
         )
       }
     })
-    const bank2Checksum = xorChecksum8BitLe(this.bytes, 0x4000, 0x5a4c) ^ 0xff
+    // Loading also synchronizes the active box's banked mirror, even when
+    // only another box was edited. Checksum every physical box without
+    // reserializing unchanged Pokemon.
+    for (let boxNumber = 0; boxNumber < 12; boxNumber++) {
+      const bankOffset = boxNumber < 6 ? 0x4000 : 0x6000
+      const bankBox = boxNumber % 6
+      const boxOffset = bankOffset + bankBox * this.BOX_SIZE
+
+      this.bytes[bankOffset + 0x1a4d + bankBox] =
+        xorChecksum8BitLe(this.bytes, boxOffset, boxOffset + this.BOX_SIZE - 1) ^ 0xff
+    }
+    const bank2Checksum = xorChecksum8BitLe(this.bytes, 0x4000, 0x5a4b) ^ 0xff
 
     this.bytes[0x5a4c] = bank2Checksum
-    const bank3Checksum = xorChecksum8BitLe(this.bytes, 0x6000, 0x7a4c) ^ 0xff
+    const bank3Checksum = xorChecksum8BitLe(this.bytes, 0x6000, 0x7a4b) ^ 0xff
 
     this.bytes[0x7a4c] = bank3Checksum
-    const wholeSaveChecksum = xorChecksum8BitLe(this.bytes, 0x2598, 0x3521) ^ 0xff
+    const wholeSaveChecksum = xorChecksum8BitLe(this.bytes, 0x2598, 0x3522) ^ 0xff
 
     this.bytes[0x3523] = wholeSaveChecksum
   }

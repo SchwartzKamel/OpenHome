@@ -49,6 +49,35 @@ test('pc box decoded correctly', () => {
   expect(blueSaveFile.boxes[7].boxSlots[10]?.nickname).toEqual('MEW')
 })
 
+test('writer checksums exclude stored checksum bytes and cover each complete box', () => {
+  const save = R.assert(
+    buildUnknownSaveFile(
+      emptyPathData,
+      new Uint8Array(fs.readFileSync(saveTestFilePath('blue.sav'))),
+      [G1SAV]
+    )
+  ) as G1SAV
+  const checksum = (start: number, end: number) =>
+    (~save.bytes.slice(start, end).reduce((sum, byte) => sum + byte, 0)) & 0xff
+
+  save.bytes[0x3522] ^= 1
+  for (const box of [0, 7]) {
+    save.setMonAt(box, 0, save.getMonAt(box, 0))
+    save.updatedBoxSlots.push({ box, boxSlot: 0 })
+  }
+  save.prepareWriter()
+
+  expect(save.bytes[0x5a4c]).toBe(checksum(0x4000, 0x5a4c))
+  expect(save.bytes[0x7a4c]).toBe(checksum(0x6000, 0x7a4c))
+  expect(save.bytes[0x3523]).toBe(checksum(0x2598, 0x3523))
+  for (const box of Array.from({ length: 12 }, (_, index) => index)) {
+    const bank = box < 6 ? 0x4000 : 0x6000
+    const bankBox = box % 6
+    const start = bank + bankBox * save.BOX_SIZE
+    expect(save.bytes[bank + 0x1a4d + bankBox]).toBe(checksum(start, start + save.BOX_SIZE))
+  }
+})
+
 test('removing mon shifts others in box', () => {
   const result1 = buildUnknownSaveFile(emptyPathData, new Uint8Array(blueSaveFile.bytes), [G1SAV])
 
