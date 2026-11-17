@@ -60,7 +60,9 @@ export default function AuthForm({
             parseWire('Username', username)
             parseWire('Password', password)
             if (bootstrap && !setupToken.trim()) {
-              setValidation('Enter the one-time setup secret from server/data/setup-token.')
+              setValidation(
+                'Enter the one-time setup secret from the configured data directory (OCI: /data/setup-token).'
+              )
               return
             }
             setValidation(undefined)

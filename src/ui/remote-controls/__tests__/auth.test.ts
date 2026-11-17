@@ -123,6 +123,14 @@ it('bootstraps only with the explicit operator secret and a pre-generated candid
   expect(screen.getByText(/server’s configured data directory/)).toBeVisible()
   credentials()
   fireEvent.change(screen.getByLabelText('One-time setup secret'), {
+    target: { value: '   ' },
+  })
+  fireEvent.click(screen.getByRole('button', { name: 'Create first owner' }))
+  expect(screen.getByRole('alert')).toHaveTextContent('configured data directory')
+  expect(screen.getByRole('alert')).toHaveTextContent('OCI: /data/setup-token')
+  expect(screen.getByRole('alert')).not.toHaveTextContent('server/data/setup-token')
+  expect(transport.requests).toHaveLength(0)
+  fireEvent.change(screen.getByLabelText('One-time setup secret'), {
     target: { value: 'unit-operator-secret-never-persist' },
   })
   fireEvent.click(screen.getByRole('button', { name: 'Create first owner' }))
