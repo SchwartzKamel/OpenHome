@@ -1,9 +1,12 @@
 # Household remote backend
 
-This is the backend slice, not the complete household UI. `App` accepts an optional
+This directory implements the backend for the integrated
+[household workspace](../../ui/household/README.md) and
+[connection/account/recovery controls](../../ui/remote-controls/README.md).
+`App` accepts an optional
 `backend` prop. Without one, the actual Tauri shell lazily loads the **unchanged**
 `TauriBackend` singleton; a browser shows **Connect later** without evaluating
-Tauri runtime modules. Remote mode renders a small authenticated bank browser,
+Tauri runtime modules. Remote mode renders the household 30-slot workspace,
 not the desktop's incompatible plugins/item-bag/120-slot editing screens.
 
 ## Connection handoff
@@ -138,8 +141,8 @@ capability-aware controls. Methods whose upstream signature has no result arm
 `capabilities` exposes the exclusions and exactly 30 vault slots. Never silently
 truncate desktop slots 30–119 or reuse the desktop's complete save-all workflow.
 There is no atomic local-file/server-vault transaction: local save writers fail
-while a vault edit buffer exists. Build explicit verified transfer controls in
-the next slice.
+while a vault edit buffer exists. The household transfer controls distinguish
+prepared downloads from locally applied or finalized operations.
 
 Dialogs, file reads/writes, recent saves and directory scanning stay on the
 **client**. In the actual shell they conditionally delegate to the original
@@ -164,8 +167,8 @@ colliding embedded identities fail visibly. Same-ID server copies remain
 distinct in the typed server view/bundle; the legacy projection cannot silently
 collapse them.
 
-Complete folder file import/export and explicit choose-copy controls are **next
-UI/adapter work**, not a claim made by these foundations. Use the lossless JSON
+Complete folder import/export and explicit choose-copy controls are documented
+in the [folder adapter](../../ui/remote-controls/README.md). Use the lossless JSON
 bundle for independent copies. A complete legacy identity projection lazily
 downloads canonical OHPKM for all active records; large collections can hit the
 server read budget. Prefer the typed summary/30-record box views for incremental
@@ -185,8 +188,8 @@ embeds their source SHA-256. Production needs no parent checkout or new package.
 No dependency or engine-version change was required.
 
 ```sh
-pnpm --dir openhome test-remote
-pnpm --dir openhome typecheck
+pnpm --dir openhome test-remote &&
+pnpm --dir openhome typecheck &&
 pnpm --dir openhome build
 ```
 
@@ -202,7 +205,8 @@ regressions must stay green alongside the original adapter tests; sequential
 happy-path tests alone do not establish the ownership/publication guarantees.
 
 These are adapter/browser-import tests, **not** Rust-service end-to-end, LTS OCI,
-actual Tauri-shell or physical-console evidence. Actual `ui-test`/desktop smoke,
-server integration, two independent non-author reviews and RUGGED remain separate
-gates. The existing GTK/WebKit/Xvfb environment is not itself a successful native
-launch; WebKitWebDriver discovery/setup remains follow-up work.
+actual Tauri-shell or physical-console evidence. The parent supplies separate
+real HTTP/worker, WebKit and isolated Tauri suites under `tests/`; its desktop
+suite replaces the upstream runner that writes tracked sample state.
+Their results and independent reviews are recorded in the parent's
+`.wgm/IMPLEMENTATION_PLAN.md`. Physical-console qualification remains separate.

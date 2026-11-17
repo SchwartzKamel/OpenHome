@@ -118,7 +118,9 @@ it('bootstraps only with the explicit operator secret and a pre-generated candid
   const transport = new UiTransport()
   const { authenticated } = showAuth(transport)
   fireEvent.click(screen.getByRole('button', { name: 'First run? Set up the owner' }))
-  expect(screen.getByText('server/data/setup-token')).toBeVisible()
+  expect(screen.getByText('setup-token')).toBeVisible()
+  expect(screen.getByText('/data/setup-token')).toBeVisible()
+  expect(screen.getByText(/server’s configured data directory/)).toBeVisible()
   credentials()
   fireEvent.change(screen.getByLabelText('One-time setup secret'), {
     target: { value: 'unit-operator-secret-never-persist' },

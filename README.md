@@ -1,3 +1,10 @@
+> **Household-server fork:** `feat/remote-backend` adds an original remote
+> workspace alongside local desktop mode. See the [connection guide](src/ui/remote-controls/README.md)
+> and [household workflows](src/ui/household/README.md). The
+> [parent server project](https://github.com/SchwartzKamel/openhome-server)
+> contains OCI/operator instructions. Upstream release downloads below do not
+> include these fork features. No Nintendo-service compatibility is claimed.
+
 ![GitHub Release](https://img.shields.io/github/v/release/andrewbenington/OpenHome)
 ![GitHub Release Date](https://img.shields.io/github/release-date/andrewbenington/OpenHome)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/andrewbenington/OpenHome/total)

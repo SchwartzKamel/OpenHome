@@ -21,7 +21,8 @@ imitate filesystem access or send client paths to the service.
   before preparing a login/bootstrap exchange. HTTPS is preferred. CSPRNG
   candidates come from `api.beginLogin` / `beginBootstrap`, before HTTP; the UI
   never expects a token in a server grant.
-- First-owner setup takes the operator secret from `server/data/setup-token`.
+- First-owner setup takes the operator secret from `OPENHOME_DATA_DIR/setup-token`
+  (OCI: `/data/setup-token`). An empty database generates it automatically.
   There is no public signup. Verified human admins can create accounts, defaulting
   to member; a host-injected authenticated backend without a session grant cannot
   cause the UI to guess an identity or admin role.

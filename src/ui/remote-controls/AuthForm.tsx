@@ -119,9 +119,10 @@ export default function AuthForm({
               onChange={(event) => setSetupToken(event.target.value)}
             />
             <p>
-              Read the operator’s <code>server/data/setup-token</code>. This creates the first admin
-              only; afterwards an admin must invite household members. There is no public signup.
-              The secret and password are kept only in this tab’s memory.
+              Read <code>setup-token</code> in the server’s configured data directory (OCI:
+              <code>/data/setup-token</code>). This creates the first admin only; afterwards an
+              admin must invite household members. There is no public signup. The secret and
+              password are kept only in this tab’s memory.
             </p>
           </>
         )}
