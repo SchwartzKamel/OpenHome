@@ -64,4 +64,4 @@ hex = "0.4.3"
 serde_json = { version = "1.0.154", features = ["raw_value"] }
 
 [package.metadata.wasm-pack.profile.release]
-wasm-opt = ["--enable-bulk-memory", "--enable-nontrapping-float-to-int"]
+wasm-opt = ["--strip-producers", "--enable-bulk-memory", "--enable-nontrapping-float-to-int"]
