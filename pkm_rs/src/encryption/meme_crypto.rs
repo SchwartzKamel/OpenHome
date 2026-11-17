@@ -210,7 +210,13 @@ impl<'a> MemeKey<'a> {
     fn rsa_private(&self, bytes: &[u8]) -> Vec<u8> {
         let m = BigInt::from_bytes_be(Sign::Plus, bytes);
         let c = m.modpow(&self.private_key, &self.modulo);
-        c.to_bytes_be().1
+        let encoded = c.to_bytes_be().1;
+        let start = SIGNATURE_LENGTH
+            .checked_sub(encoded.len())
+            .expect("RSA result exceeds the fixed signature width");
+        let mut signature = vec![0; SIGNATURE_LENGTH];
+        signature[start..].copy_from_slice(&encoded);
+        signature
     }
 }
 
@@ -317,6 +323,94 @@ mod tests {
             "1fd81da0c10c63dcf3cbd1d0703190477736ee9cdba46ce8dee9bcaeace1457f79b0ffd9ea8031f60c56ccacc8acdea4c7bc54e540308673e35c15d1b907034627fb65a427d7f4b1ff2b6c84e6058698ac62dd66b74db21c7c301bf55d9e5fde"
         );
 
+        Ok(())
+    }
+
+    #[test]
+    fn rsa_private_preserves_leading_zero_width() {
+        let key = MemeKey::pokedex_and_save_file();
+        for value in [0u8, 1] {
+            let encrypted = key.rsa_private(&[value]);
+            assert_eq!(encrypted.len(), SIGNATURE_LENGTH);
+            assert!(encrypted[..SIGNATURE_LENGTH - 1].iter().all(|&b| b == 0));
+            assert_eq!(encrypted[SIGNATURE_LENGTH - 1], value);
+            assert_eq!(
+                BigInt::from_bytes_be(Sign::Plus, &encrypted).modpow(&key._public_key, &key.modulo),
+                BigInt::from(value)
+            );
+        }
+    }
+
+    #[test]
+    #[should_panic(expected = "RSA result exceeds the fixed signature width")]
+    fn rsa_private_rejects_oversize_result() {
+        let mut key = MemeKey::pokedex_and_save_file();
+        key.private_key = BigInt::from(1u8);
+        key.modulo = BigInt::from(1u8) << ((SIGNATURE_LENGTH + 1) * 8);
+        key.rsa_private(&[1u8; SIGNATURE_LENGTH + 1]);
+    }
+
+    #[test]
+    fn moon_slot_three_removal_preserves_leading_zero_signature() -> Result<()> {
+        use crate::gen7_alola::Gen7AlolaSave;
+        use crate::traits::PkmBytes;
+
+        let fixture = Path::new("gen7-alola").join("moon");
+        let original = save_bytes_from_file(&fixture)?;
+        let mut save = Gen7AlolaSave::from_bytes_sunmoon(&original)?;
+        let mut before = Vec::new();
+        for box_index in 0..32 {
+            for slot in 0..30 {
+                before.push(
+                    save.get_mon_at_wasm(box_index, slot)?
+                        .map(|mon| mon.to_box_bytes()),
+                );
+            }
+        }
+        assert_eq!(
+            &before[3].as_ref().expect("occupied Charmander slot")[8..10],
+            &4u16.to_le_bytes()
+        );
+        save.set_mon_at_wasm(0, 3, None);
+        let prepared = save.prepare_bytes_for_saving();
+        assert_eq!(prepared.len(), original.len());
+
+        let mut crc = 0xffffu16;
+        for &byte in &prepared[0x4e00..0x4e00 + 0x36600] {
+            crc ^= u16::from(byte);
+            for _ in 0..8 {
+                crc = (crc >> 1) ^ if crc & 1 == 1 { 0xa001 } else { 0 };
+            }
+        }
+        assert_eq!(!crc, 0xfa83);
+        assert_eq!(&prepared[0x6bc8a..0x6bc8c], &0xfa83u16.to_le_bytes());
+        assert_eq!(
+            &prepared[0x6bb20..0x6bb26],
+            &[0x00, 0xb9, 0x71, 0xb9, 0x8e, 0x4e]
+        );
+        let ranges = [
+            0x4e00 + 3 * 232..0x4e00 + 4 * 232,
+            0x6bc8a..0x6bc8c,
+            0x6bb00..0x6bb80,
+        ];
+        for (index, (&old, &new)) in original.iter().zip(prepared.iter()).enumerate() {
+            if old != new {
+                assert!(ranges.iter().any(|range| range.contains(&index)));
+            }
+        }
+        before[3] = None;
+        let reparsed = Gen7AlolaSave::from_bytes_sunmoon(&prepared)?;
+        for box_index in 0..32 {
+            for slot in 0..30 {
+                assert_eq!(
+                    reparsed
+                        .get_mon_at_wasm(box_index, slot)?
+                        .map(|mon| mon.to_box_bytes()),
+                    before[usize::from(box_index) * 30 + usize::from(slot)]
+                );
+            }
+        }
+        assert_eq!(original, save_bytes_from_file(&fixture)?);
         Ok(())
     }
 
