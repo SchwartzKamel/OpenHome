@@ -1,150 +1,85 @@
-> **Household-server fork:** `feat/remote-backend` adds an original remote
-> workspace alongside local desktop mode. See the [connection guide](src/ui/remote-controls/README.md)
-> and [household workflows](src/ui/household/README.md). The
-> [parent server project](https://github.com/SchwartzKamel/openhome-server)
-> contains OCI/operator instructions. Upstream release downloads below do not
-> include these fork features. No Nintendo-service compatibility is claimed.
-
-![GitHub Release](https://img.shields.io/github/v/release/andrewbenington/OpenHome)
-![GitHub Release Date](https://img.shields.io/github/release-date/andrewbenington/OpenHome)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/andrewbenington/OpenHome/total)
-![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/andrewbenington/OpenHome/latest/total)
-
-[![Enforce Types + Linting](https://github.com/andrewbenington/OpenHome/actions/workflows/typecheck-lint.yaml/badge.svg)](https://github.com/andrewbenington/OpenHome/actions/workflows/typecheck-lint.yaml)
-![GitHub top language](https://img.shields.io/github/languages/top/andrewbenington/OpenHome)
-![GitHub language count](https://img.shields.io/github/languages/count/andrewbenington/OpenHome)
-![GitHub contributors](https://img.shields.io/github/contributors/andrewbenington/OpenHome)
-
-<p>
-  OpenHome uses <a href="https://tauri.app/">Tauri</a>, <a href="https://facebook.github.io/react/">React</a>, <a href="https://www.radix-ui.com/">Radix UI</a>, and <a href="https://vite.dev/">Vite</a>.
-</p>
-
 # OpenHome
 
-OpenHome is an open source, cross-platform tool for storing and moving Pokémon between games nearly losslessly, much like Pokémon Home on the Nintendo Switch. Unlike Pokémon Home, OpenHome also allows for moving Pokémon to past generations from future ones. When a Pokémon is moved into a save file, its data from other games is saved locally, so nothing is lost when transferring to past generations.
+## Fork & Remote Server Notice
 
-For example, you can move your Kalos Champion Sceptile from Pokémon X to Pokémon Ruby, earn the Artist Ribbon, and it will have both the Kalos Champion and Artist ribbons when moved back to Pokémon X.
+> **Important:** This is the `feat/remote-backend` fork used with
+> [`openhome-server`](../README.md), **not** upstream
+> [`andrewbenington/OpenHome`](https://github.com/andrewbenington/OpenHome).
+> Upstream GitHub Releases do not include remote server support.
 
-Visit the [GitHub Pages site](https://andrewbenington.github.io/OpenHome/) for easy download links and more information. To build the app yourself, follow the instructions in [INSTALL.md](./docs/INSTALL.md)
+When connected to **`openhome-server` (Remote mode)**, capabilities and
+guarantees differ from upstream **Local desktop mode**:
+
+| Feature / Guarantee        | Upstream Local Mode (Desktop Only)                                             | Remote Server Mode (`openhome-server`)                                                                                                                                                                                                                                                                                                                                                                                           |
+| -------------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Box & save layout**      | 120-slot local banks, plugins, item bag                                        | **30-slot boxes** only; no plugins, item bag, or desktop-only editors                                                                                                                                                                                                                                                                                                                                                            |
+| **Supported PKM / saves**  | All official formats (except Korean Gen 1–2, Colosseum/XD, HOME) + 4 ROM hacks | **Bounded subset:** `OHPKM` V2 and `PK1/2/4/5/6/7/8`; saves: `Gen 1` (Int/JP, excluding standalone JP `PK1` conversion), `Gen 2` (Crystal — **no Gold/Silver**), `Gen 4` (Pearl/Platinum/HeartGold tested; Diamond/SoulSilver unverified), `Gen 5` (Black/White — **no B2/W2**), `Gen 6` (repaired XY PC-box fixture only; live saves & ORAS uncertified), `Gen 7` (Moon SM & Ultra Sun USUM tested; Sun/Ultra Moon uncertified) |
+| **Unsupported in Remote**  | —                                                                              | **Excluded:** `OHPKM V1`, standalone JP `PK1` conversion, Gen 3/`PK3`, `PB7/PB8/PA8/PK9/PA9`, Gen 8+ saves, `Gold/Silver`, `B2/W2`, `ORAS`, ROM hacks, plugins, item bag, party access, VC archive extraction/reimport, and direct 3DS save writes                                                                                                                                                                               |
+| **Conversion loss policy** | Mutates PID/OT/conversion data locally                                         | **`allow_lossy: false` by default** (`422` when lossy); preview-only lossy export requires explicit per-insertion consent                                                                                                                                                                                                                                                                                                        |
+| **Source saves & custody** | Reads/writes local save files directly                                         | **Source saves are never overwritten on upload** (COPY semantics); raw original bytes/length/SHA-256 retained separately                                                                                                                                                                                                                                                                                                         |
+| **Vault separation**       | Local desktop folder only                                                      | Local desktop collections and server vaults are **separate** (no auto-upload or merge)                                                                                                                                                                                                                                                                                                                                           |
+
+### Fork Run & Build Links
+
+- **Run server & browser client:** See [`../docs/running.md`](../docs/running.md)
+- **Build & connect the Linux desktop client:** Follow [`../docs/desktop.md`](../docs/desktop.md) (`pnpm --dir openhome install --frozen-lockfile --ignore-scripts`, **not** upstream `BUILD_LINUX.md` / `make start`; Linux `--debug` verified only, Windows/macOS untested)
+- **Remote backend & UI guides:**
+  - [`src/core/remote/README.md`](src/core/remote/README.md) — `RemoteBackend`, transport, retry, and transaction invariants
+  - [`src/ui/remote-controls/README.md`](src/ui/remote-controls/README.md) — profiles, auth, 3DS pairing, snapshots, and folder import/export
+  - [`src/ui/household/README.md`](src/ui/household/README.md) — 30-slot boxes, COPY imports, tags/favorites, trackers, and link trade rooms
 
 ## Disclaimer
 
-OpenHome is only intended to be used for fun. Pokémon modified by OpenHome are not guaranteed to be legal Pokémon when transferred to a modern Pokémon game, and should never be used in official competitions or online play. Pokémon modified by OpenHome should not be moved into Pokémon Home, and Pokémon that have previously been stored in Pokémon Home should not be modified with OpenHome. Doing so may result in your Pokémon Home account being suspended.
+OpenHome is intended for hobby use only. Modified Pokémon are not guaranteed
+to be legal in official competitions or online play and should never be moved
+into Pokémon HOME (doing so may suspend your account). No Nintendo-service
+compatibility is claimed, piracy is not endorsed, and you should always back up
+original save files before modifying them.
 
-The OpenHome developers do not endorse piracy. There are online guides available with instructions on how to dump save files and ROMs of games from physically owned cartridges.
+---
 
-**While we do our best to avoid glitches, it's always a good idea to back up your save files in case of a save corruption error.**
+## Upstream OpenHome Overview (Local Mode)
 
-## Screenshots
+> Everything below describes upstream OpenHome's **Local desktop mode** and does
+> **not** apply to `openhome-server` Remote mode.
 
-<img width="1000" src="docs/newScreenshots/MainPage.png"><img width="200" src="docs/newScreenshots/MainPageFiltered.png"><img width="200" src="docs/newScreenshots/MainPageBoxView.png"><img width="200" src="docs/newScreenshots/PkmnSummary.png"><img width="200" src="docs/newScreenshots/PkmnOldSprite.png"><img width="200" src="docs/newScreenshots/PkmnMoves.png"><img width="200" src="docs/newScreenshots/PkmnStats.png"><img width="200" src="docs/newScreenshots/PkmnRibbon.png"><img width="200" src="docs/newScreenshots/PkmnOther.png">
+OpenHome is an open-source, cross-platform tool (built with Tauri, React,
+Radix UI, and Vite) for storing and moving Pokémon between local save files,
+including backward transfers across generations while retaining future-game
+data in local OpenHome storage.
 
-## Building App Locally
+<img width="900" src="docs/newScreenshots/MainPage.png">
 
-If you don't want to bypass your security restrictions to download the app, you can instead download the source code and build the app locally. Follow these instructions:
+### Upstream Local-Mode Building & Demo
 
-For [Windows](./docs/BUILD_WINDOWS.md)
+To build standalone **Local mode** without `openhome-server` remote features:
 
-For [macOS](./docs/BUILD_MAC.md)
+- [Windows build guide](./docs/BUILD_WINDOWS.md)
+- [macOS build guide](./docs/BUILD_MAC.md)
+- [Linux build guide](./docs/BUILD_LINUX.md) (upstream local desktop only — for this fork, use [`../docs/desktop.md`](../docs/desktop.md))
+- [Install notes](./docs/INSTALL.md) · [Upstream project page](https://andrewbenington.github.io/OpenHome/) · [Local-mode demo video](https://youtu.be/s8MoLsySvOw)
 
-For [Linux](./docs/BUILD_LINUX.md)
+### Upstream Local-Mode Format Support
 
-NodeJS and Rust are needed for compilation. For Linux, additional dependencies are needed for Tauri to compile. These are listed in the Linux build instructions, but the most up-to-date list is in the Tauri documentation.
-
-## Moving Between Saves
-
-This video is from an old version; The concept is the same but I'm too lazy to remake it.
-
-[![Demo Video](https://img.youtube.com/vi/s8MoLsySvOw/hqdefault.jpg)](https://youtu.be/s8MoLsySvOw)
-
-The extra Champion Ribbon in Emerald, 0hp in Blue, and HeartGold/SoulSilver save misidentification are all bugs that have been fixed in the latest version.
-
-## Current Support
-
-Development is ongoing. While OpenHome does its best to convert Pokemon between
-formats losslessly, there are sometimes mistakes. It's always a good idea to back up
-your Pokémon and save files. If you come across a bug, create an [issue](https://github.com/andrewbenington/OpenHome/issues) to bring it to my attention.
-
-As of Version 1.10.1, newly tracked Pokémon include a backup of their original data that should remain unchanged.
-
-### Official Formats
-
-All official PKM formats are supported, except for:
-
-- Korean versions of Gen 1/Gen 2 Pokémon
-- Pokémon from Colosseum and XD: Gale of Darkness
-- Pokémon HOME files
-
-Colosseum/XD and Korean Gen 1/Gen 2 save files are also unsupported as of now.
-
-Support for more formats will be added if there is demand for them, and when I have time to work on them.
-
-### ROM Hack formats
-
-PKM and save files for the following ROM hacks are supported:
+Local mode supports official PKM/save formats except Korean Gen 1/Gen 2,
+Pokémon Colosseum/XD, and Pokémon HOME files, plus four ROM hacks:
 
 - Pokémon Radical Red
 - Pokémon Unbound
 - Pokémon Luminescent Platinum
 - Pokémon Compass
 
-Forms exclusive to these ROM hacks can be moved into OpenHome and save files of other ROM hacks that support those forms. This includes forms like Stitched Gengar, Balloon Pikachu, and Seviian forms. Support for these forms is new and may have some bugs.
+When moving Pokémon to older games in Local mode, OpenHome adapts tracking
+fields (such as PID or Gen 1/2 OT tracking IDs) to preserve nature, ability,
+gender, and shininess where possible, and restores local data when moved back
+to newer games.
 
-## Alterations to transferred Pokémon
+### Code & Research Credits
 
-When moving Pokémon to an older game, some compromises have to be made. OpenHome will
-try its best to preserve aspects of a Pokémon such as its nature, ability, gender, and
-shininess, all of which are usually possible minus some specific cases in the GameBoy
-games. These compromises will be reverted when moving back to a future game.
-
-For example, a Pokémon originating in Generation VI being moved into a Generation III
-game will have its personality value altered to preserve its nature, ability (if
-possible), gender, and shininess.
-
-A Pokémon transferred into Generation I or II will have it's Original Trainer's ID
-changed to a "tracking number" of sorts due to the lack of a Personality Value in
-those games.
-
-## Current Project Goals
-
-- [Rewrite save/pkm logic in Rust](./RUST_REWRITE.md)
-- Android version (long-term goal, requires some interface rework)
-
-## Code/Research Credits
-
-### PKHeX
-
-This application would not have been possible without the research done at https://projectpokemon.org/, the work done by the [PKHeX](https://github.com/kwsch/PKHeX) developers, and the sprites archived by https://pokemondb.net/ and https://www.bulbagarden.net/.
-
-The PKHeX code was used as a reference for the OpenHome implementation of:
-
-- Reading/writing PKM formats
-- Reading/writing save file formats
-- Encryption/decryption of PKM and save data
-- Reading/writing binary resource files
-
-The following resources are sourced directly from the PKHeX codebase:
-
-- Species/form "personal data" (stats, typing, gender ratio, etc)
-- Move learnsets
-- Text resources (names of Pokémon, items, moves, locations, ribbons, etc)
-
-### ROM Hacks
-
-Credit to the [Radical Red Team](https://www.pokecommunity.com/threads/pok%C3%A9mon-radical-red-version-4-1-released-gen-9-dlc-pokemon-character-customization-now-available.437688/) for the Radical Red logo, as well as the Pokémon sprites.
-
-Credit to [Team Luminescent](https://luminescent.team/) for the PKLumiHeX program, which provided critical information about the save file structure, and for the Luminescent Platinum logo.
-
-Credit to the [Pokémon Compass](https://www.nexusmods.com/pokemonscarletandviolet/mods/21) team for the game logo, as well as [PKCompassHeX](https://github.com/mtxCore/PKCompassHeX) for information on Compass save block keys.
-
-Pokémon Home extra form photoshops were created by [PkmnHomeIcons](https://github.com/nileplumb/PkmnHomeIcons). This includes Stitched Gengar, the Clone Pokémon, and the extra Pikachu forms.
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=andrewbenington%2FOpenHome&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=andrewbenington/OpenHome&type=date&theme=dark&legend=top-left&sealed_token=S9bBCq298BKDQ54z8Mp90S5hKAJo-EAha4AfGpxRNR8IaeyKid4GG2MKCdqu-6uimbjcnRQpV6-9-s1vHn2193UmR3TEmwzKGRpsolHqJqf6HjLm61jkl6Wg-I8pWLxDH-eBvC6a41kJ48gmZ8kGlexptbqZ6B59EUC0lUquuwfhQ2fIdCMpfQvR6iWc" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=andrewbenington/OpenHome&type=date&legend=top-left&sealed_token=S9bBCq298BKDQ54z8Mp90S5hKAJo-EAha4AfGpxRNR8IaeyKid4GG2MKCdqu-6uimbjcnRQpV6-9-s1vHn2193UmR3TEmwzKGRpsolHqJqf6HjLm61jkl6Wg-I8pWLxDH-eBvC6a41kJ48gmZ8kGlexptbqZ6B59EUC0lUquuwfhQ2fIdCMpfQvR6iWc" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=andrewbenington/OpenHome&type=date&legend=top-left&sealed_token=S9bBCq298BKDQ54z8Mp90S5hKAJo-EAha4AfGpxRNR8IaeyKid4GG2MKCdqu-6uimbjcnRQpV6-9-s1vHn2193UmR3TEmwzKGRpsolHqJqf6HjLm61jkl6Wg-I8pWLxDH-eBvC6a41kJ48gmZ8kGlexptbqZ6B59EUC0lUquuwfhQ2fIdCMpfQvR6iWc" />
- </picture>
-</a>
+- **[PKHeX](https://github.com/kwsch/PKHeX)**, [Project Pokémon](https://projectpokemon.org/),
+  [PokémonDB](https://pokemondb.net/), and [Bulbagarden](https://www.bulbagarden.net/)
+  for PKM/save format documentation, encryption/decryption, personal stats,
+  move learnsets, and text/sprite resources.
+- **ROM hack & icon credits:** Radical Red Team, Team Luminescent
+  (PKLumiHeX), Pokémon Compass / PKCompassHeX, and
+  [PkmnHomeIcons](https://github.com/nileplumb/PkmnHomeIcons).
