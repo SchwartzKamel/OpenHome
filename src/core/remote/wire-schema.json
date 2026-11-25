@@ -1,5 +1,5 @@
 {
-  "source_sha256": "2c6eef2830c5a86ab7d009d8f5856bfd1ef31829b6797889473ea8bd43f52302",
+  "source_sha256": "2ebf1edc60f301661053eefff6ec3e2727dddae6aa9ebd62827e466d3fd198cb",
   "definitions": {
     "Id": {
       "type": "string",
@@ -711,7 +711,7 @@
         "index": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 15
+          "maximum": 31
         },
         "source_name": {
           "$ref": "OpenHomeSourceName"
@@ -793,12 +793,12 @@
         "current_bank": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 15
+          "maximum": 31
         },
         "banks": {
           "type": "array",
           "minItems": 1,
-          "maxItems": 16,
+          "maxItems": 32,
           "items": {
             "$ref": "OpenHomeBankLink"
           }
@@ -820,7 +820,7 @@
         "banks": {
           "type": "array",
           "minItems": 1,
-          "maxItems": 16,
+          "maxItems": 32,
           "items": {
             "$ref": "Bank"
           }
@@ -844,7 +844,7 @@
         },
         "metadata": {
           "type": "array",
-          "maxItems": 10000,
+          "maxItems": 20000,
           "items": {
             "$ref": "PokemonMetadata"
           }
@@ -907,7 +907,7 @@
         "forms": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 10000
+          "maximum": 20000
         },
         "moves": {
           "type": "integer",
@@ -943,7 +943,7 @@
         "pokemon_count": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 10000
+          "maximum": 20000
         },
         "pokedex": {
           "$ref": "TrackerCounts"
@@ -1002,7 +1002,7 @@
         "banks": {
           "type": "array",
           "minItems": 1,
-          "maxItems": 16,
+          "maxItems": 32,
           "items": {
             "$ref": "BankSummary"
           }
@@ -1010,7 +1010,7 @@
         "pokemon_count": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 10000
+          "maximum": 20000
         }
       }
     },
@@ -1163,7 +1163,7 @@
         },
         "items": {
           "type": "array",
-          "maxItems": 100,
+          "maxItems": 500,
           "items": {
             "$ref": "PokemonRecord"
           }
@@ -1496,6 +1496,37 @@
         }
       }
     },
+    "SavePcCopyRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "bank_name"],
+      "properties": {
+        "input": {
+          "$ref": "SaveInput"
+        },
+        "bank_name": {
+          "$ref": "Name"
+        }
+      }
+    },
+    "SavePcCopyResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "bank_id", "copied"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "bank_id": {
+          "$ref": "Id"
+        },
+        "copied": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 720
+        }
+      }
+    },
     "PokemonExportRequest": {
       "oneOf": [
         {
@@ -1574,7 +1605,7 @@
             "count": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 10000
+              "maximum": 20000
             }
           }
         },
@@ -1596,7 +1627,7 @@
             "count": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 10000
+              "maximum": 20000
             }
           }
         },
@@ -1613,7 +1644,7 @@
             "count": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 10000
+              "maximum": 20000
             }
           }
         },
@@ -1630,7 +1661,7 @@
             "count": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 10000
+              "maximum": 20000
             }
           }
         },
@@ -1647,7 +1678,7 @@
             "count": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 10000
+              "maximum": 20000
             }
           }
         }
@@ -1677,7 +1708,7 @@
         "favorite_count": {
           "type": "integer",
           "minimum": 0,
-          "maximum": 10000
+          "maximum": 20000
         },
         "tags": {
           "type": "array",
@@ -1693,7 +1724,7 @@
               "count": {
                 "type": "integer",
                 "minimum": 1,
-                "maximum": 10000
+                "maximum": 20000
               }
             }
           }
@@ -1974,7 +2005,7 @@
         },
         "id_map": {
           "type": "array",
-          "maxItems": 42000,
+          "maxItems": 84000,
           "items": {
             "$ref": "IdMapping"
           }
@@ -2020,14 +2051,14 @@
         },
         "pokemon": {
           "type": "array",
-          "maxItems": 10000,
+          "maxItems": 20000,
           "items": {
             "$ref": "PokemonRecord"
           }
         },
         "artifacts": {
           "type": "array",
-          "maxItems": 30000,
+          "maxItems": 60000,
           "items": {
             "$ref": "BundleArtifact"
           }
@@ -2073,7 +2104,7 @@
         },
         "id_map": {
           "type": "array",
-          "maxItems": 42000,
+          "maxItems": 84000,
           "items": {
             "$ref": "IdMapping"
           }
@@ -2777,17 +2808,17 @@
         "vault_metadata_bytes": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 16777216
+          "maximum": 50331648
         },
         "pokemon_per_vault": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 10000
+          "maximum": 20000
         },
         "page_size": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 100
+          "maximum": 500
         }
       }
     },
@@ -3626,7 +3657,7 @@
           "limit": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 100
+            "maximum": 500
           },
           "cursor": {
             "$ref": "Cursor"
@@ -3821,6 +3852,34 @@
       "outputSchema": {
         "$ref": "SaveInspectResult"
       }
+    },
+    "copySavePc": {
+      "method": "POST",
+      "path": "/api/v1/saves/copy-pc",
+      "auth": "bearer",
+      "durable": true,
+      "revision": "vault",
+      "bodyMaxBytes": 33554432,
+      "status": 201,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "bodySchema": {
+        "$ref": "SavePcCopyRequest"
+      },
+      "outputSchema": {
+        "$ref": "SavePcCopyResult"
+      },
+      "etag": "vault"
     },
     "listSnapshots": {
       "method": "GET",

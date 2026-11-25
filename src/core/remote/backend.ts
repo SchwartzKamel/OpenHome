@@ -411,7 +411,7 @@ export class RemoteBackend implements BackendInterface {
         do {
           const page = await this.api.call('listPokemon', {
             query: {
-              limit: Math.min(status.limits.page_size, 100),
+              limit: status.limits.page_size,
               at_revision: vault.revision,
               ...(cursor && { cursor }),
             },
@@ -429,7 +429,7 @@ export class RemoteBackend implements BackendInterface {
             }
             records.set(record.id, record)
           }
-          if (records.size > 10_000)
+          if (records.size > status.limits.pokemon_per_vault)
             throw new RemoteError('limit_exceeded', 'The vault traversal exceeds the record limit')
           cursor = page.data.next_cursor ?? undefined
           if (cursor && cursors.has(cursor))
