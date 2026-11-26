@@ -429,11 +429,14 @@ export class RemoteClient {
     const bundle =
       definition.path.includes('/bundles/') ||
       (definition.path.includes('/snapshots/') && definition.path.endsWith('/export'))
-    const timeout = bundle
-      ? 60_000
-      : definition.bodyMaxBytes >= 33_554_432 || definition.path.endsWith('/export')
-        ? 40_000
-        : 10_000
+    const timeout =
+      definition === operations.restoreSnapshot
+        ? 65_000
+        : bundle
+          ? 60_000
+          : definition.bodyMaxBytes >= 33_554_432 || definition.path.endsWith('/export')
+            ? 40_000
+            : 10_000
     const timer = setTimeout(() => controller.abort(), timeout)
     let response: Response | undefined
     let ownedUnauthorized = false

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { createHash, webcrypto } from 'node:crypto'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { RemoteClient } from '../client'
+import { MemoryCredentialStore, RemoteClient } from '../client'
 import { decodeBytes, newBearer, newId, pokemonInput, sha256 } from '../crypto'
 import { parseJson, parseWire } from '../validation'
 import { HouseholdServer, id, USER } from './support'
@@ -20,6 +20,41 @@ afterEach(async () => {
 const client = () => new RemoteClient({ baseUrl: server.baseUrl, acknowledgeInsecureHttp: true })
 
 describe('opaque credentials and fixed v1 HTTP requests', () => {
+  it('waits past the ordinary deadline for a snapshot restore acknowledgement', async () => {
+    const snapshot = id(20)
+    const credentials = new MemoryCredentialStore()
+    credentials.write(newBearer())
+    const api = new RemoteClient({
+      baseUrl: server.baseUrl,
+      acknowledgeInsecureHttp: true,
+      credentials,
+      fetch: async (_url, options) => {
+        await new Promise<void>((resolve, reject) => {
+          const timer = setTimeout(resolve, 11_000)
+          options?.signal?.addEventListener('abort', () => {
+            clearTimeout(timer)
+            reject(options.signal?.reason)
+          }, { once: true })
+        })
+        return Response.json(
+          { revision: 3, restored_snapshot_id: snapshot, id_map: [] } satisfies Wire.RestoreResult,
+          { headers: { ETag: '"vault-3"' } }
+        )
+      },
+    })
+
+    vi.useFakeTimers()
+    try {
+      const outcome = api.call('restoreSnapshot', {
+        path: { snapshot_id: snapshot }, ifMatch: '"vault-2"', body: {},
+      }).catch((error: unknown) => error)
+      await vi.advanceTimersByTimeAsync(11_000)
+      expect(await outcome).toMatchObject({ data: { revision: 3, restored_snapshot_id: snapshot } })
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('does not reactivate or report a cleared successful exchange as a fresh login', async () => {
     const api = client()
     const exchange = api.beginLogin('owner', 'long-unit-password')
