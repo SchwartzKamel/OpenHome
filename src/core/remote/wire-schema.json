@@ -1,5 +1,5 @@
 {
-  "source_sha256": "2ebf1edc60f301661053eefff6ec3e2727dddae6aa9ebd62827e466d3fd198cb",
+  "source_sha256": "9252e116ee5c594cb92dd8f1221d412d50a664691b425b30fe74663799406b50",
   "definitions": {
     "Id": {
       "type": "string",
@@ -1724,6 +1724,43 @@
               "count": {
                 "type": "integer",
                 "minimum": 1,
+                "maximum": 20000
+              }
+            }
+          }
+        }
+      }
+    },
+    "LivingDex": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision", "items"],
+      "properties": {
+        "revision": {
+          "$ref": "Revision"
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 1025,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["species", "hatched_count", "unverified_count"],
+            "properties": {
+              "species": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1025
+              },
+              "hatched_count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20000
+              },
+              "unverified_count": {
+                "type": "integer",
+                "minimum": 0,
                 "maximum": 20000
               }
             }
@@ -3823,6 +3860,35 @@
       },
       "outputSchema": {
         "$ref": "MetadataPage"
+      },
+      "etag": "vault"
+    },
+    "getLivingDex": {
+      "method": "GET",
+      "path": "/api/v1/trackers/living-dex",
+      "auth": "bearer",
+      "durable": false,
+      "revision": "vault",
+      "bodyMaxBytes": 0,
+      "status": 200,
+      "pathSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {},
+        "required": []
+      },
+      "querySchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "at_revision": {
+            "$ref": "Revision"
+          }
+        },
+        "required": []
+      },
+      "outputSchema": {
+        "$ref": "LivingDex"
       },
       "etag": "vault"
     },
